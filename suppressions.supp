@@ -1,0 +1,31 @@
+{
+   XShmCreateImage
+   Memcheck:Leak
+   match-leak-kinds: indirect
+   fun:calloc
+   fun:XShmCreateImage
+   fun:mlx_int_new_xshm_image
+   fun:mlx_new_image
+   fun:mlx_int_parse_xpm
+   fun:mlx_xpm_file_to_image
+   fun:l_img
+   fun:load_images
+   fun:init_mlx
+   fun:init_game
+   fun:main
+}
+{
+   mlx_int_new_xshm_image
+   Memcheck:Leak
+   match-leak-kinds: definite
+   fun:calloc
+   fun:mlx_int_new_xshm_image
+   fun:mlx_new_image
+   fun:mlx_int_parse_xpm
+   fun:mlx_xpm_file_to_image
+   fun:l_img
+   fun:load_images
+   fun:init_mlx
+   fun:init_game
+   fun:main
+}

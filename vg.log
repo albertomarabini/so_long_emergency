@@ -1,0 +1,189 @@
+==3615== Memcheck, a memory error detector
+==3615== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==3615== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==3615== Command: ../debugger/a.out ./maps/piscine_bonus.ber
+==3615== Parent PID: 3614
+==3615== 
+==3615== Invalid free() / delete / delete[] / realloc()
+==3615==    at 0x484B27F: free (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==3615==    by 0x114917: find_shortest_path (so_long_path_finder_bonus.c:711)
+==3615==    by 0x112311: render_next_frame (so_long_gameplay_bonus.c:130)
+==3615==    by 0x1157BC: mlx_loop (in /root/C/debugger/a.out)
+==3615==    by 0x111D69: init_mlx (so_long_init_mlx_bonus.c:135)
+==3615==    by 0x1104EC: init_game (so_long_bonus.c:96)
+==3615==    by 0x11056A: main (so_long_bonus.c:112)
+==3615==  Address 0x4e7c3a0 is 0 bytes inside a block of size 16 free'd
+==3615==    at 0x484B27F: free (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==3615==    by 0x112597: c_frr (so_long_ft_utils_bonus.c:31)
+==3615==    by 0x1147D8: trak_back_paths (so_long_path_finder_bonus.c:671)
+==3615==    by 0x114907: find_shortest_path (so_long_path_finder_bonus.c:710)
+==3615==    by 0x112311: render_next_frame (so_long_gameplay_bonus.c:130)
+==3615==    by 0x1157BC: mlx_loop (in /root/C/debugger/a.out)
+==3615==    by 0x111D69: init_mlx (so_long_init_mlx_bonus.c:135)
+==3615==    by 0x1104EC: init_game (so_long_bonus.c:96)
+==3615==    by 0x11056A: main (so_long_bonus.c:112)
+==3615==  Block was alloc'd at
+==3615==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==3615==    by 0x112557: c_alloc (so_long_ft_utils_bonus.c:19)
+==3615==    by 0x11294E: create_p (so_long_ft_utils_bonus.c:156)
+==3615==    by 0x11487E: find_shortest_path (so_long_path_finder_bonus.c:707)
+==3615==    by 0x112311: render_next_frame (so_long_gameplay_bonus.c:130)
+==3615==    by 0x1157BC: mlx_loop (in /root/C/debugger/a.out)
+==3615==    by 0x111D69: init_mlx (so_long_init_mlx_bonus.c:135)
+==3615==    by 0x1104EC: init_game (so_long_bonus.c:96)
+==3615==    by 0x11056A: main (so_long_bonus.c:112)
+==3615== 
+==3615== Invalid read of size 4
+==3615==    at 0x112341: render_next_frame (so_long_gameplay_bonus.c:134)
+==3615==    by 0x1157BC: mlx_loop (in /root/C/debugger/a.out)
+==3615==    by 0x111D69: init_mlx (so_long_init_mlx_bonus.c:135)
+==3615==    by 0x1104EC: init_game (so_long_bonus.c:96)
+==3615==    by 0x11056A: main (so_long_bonus.c:112)
+==3615==  Address 0x7be6f60 is 0 bytes inside a block of size 16 free'd
+==3615==    at 0x484B27F: free (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==3615==    by 0x114917: find_shortest_path (so_long_path_finder_bonus.c:711)
+==3615==    by 0x112311: render_next_frame (so_long_gameplay_bonus.c:130)
+==3615==    by 0x1157BC: mlx_loop (in /root/C/debugger/a.out)
+==3615==    by 0x111D69: init_mlx (so_long_init_mlx_bonus.c:135)
+==3615==    by 0x1104EC: init_game (so_long_bonus.c:96)
+==3615==    by 0x11056A: main (so_long_bonus.c:112)
+==3615==  Block was alloc'd at
+==3615==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==3615==    by 0x112557: c_alloc (so_long_ft_utils_bonus.c:19)
+==3615==    by 0x11294E: create_p (so_long_ft_utils_bonus.c:156)
+==3615==    by 0x11487E: find_shortest_path (so_long_path_finder_bonus.c:707)
+==3615==    by 0x112311: render_next_frame (so_long_gameplay_bonus.c:130)
+==3615==    by 0x1157BC: mlx_loop (in /root/C/debugger/a.out)
+==3615==    by 0x111D69: init_mlx (so_long_init_mlx_bonus.c:135)
+==3615==    by 0x1104EC: init_game (so_long_bonus.c:96)
+==3615==    by 0x11056A: main (so_long_bonus.c:112)
+==3615== 
+==3615== Invalid read of size 4
+==3615==    at 0x112352: render_next_frame (so_long_gameplay_bonus.c:134)
+==3615==    by 0x1157BC: mlx_loop (in /root/C/debugger/a.out)
+==3615==    by 0x111D69: init_mlx (so_long_init_mlx_bonus.c:135)
+==3615==    by 0x1104EC: init_game (so_long_bonus.c:96)
+==3615==    by 0x11056A: main (so_long_bonus.c:112)
+==3615==  Address 0x7be6f64 is 4 bytes inside a block of size 16 free'd
+==3615==    at 0x484B27F: free (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==3615==    by 0x114917: find_shortest_path (so_long_path_finder_bonus.c:711)
+==3615==    by 0x112311: render_next_frame (so_long_gameplay_bonus.c:130)
+==3615==    by 0x1157BC: mlx_loop (in /root/C/debugger/a.out)
+==3615==    by 0x111D69: init_mlx (so_long_init_mlx_bonus.c:135)
+==3615==    by 0x1104EC: init_game (so_long_bonus.c:96)
+==3615==    by 0x11056A: main (so_long_bonus.c:112)
+==3615==  Block was alloc'd at
+==3615==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==3615==    by 0x112557: c_alloc (so_long_ft_utils_bonus.c:19)
+==3615==    by 0x11294E: create_p (so_long_ft_utils_bonus.c:156)
+==3615==    by 0x11487E: find_shortest_path (so_long_path_finder_bonus.c:707)
+==3615==    by 0x112311: render_next_frame (so_long_gameplay_bonus.c:130)
+==3615==    by 0x1157BC: mlx_loop (in /root/C/debugger/a.out)
+==3615==    by 0x111D69: init_mlx (so_long_init_mlx_bonus.c:135)
+==3615==    by 0x1104EC: init_game (so_long_bonus.c:96)
+==3615==    by 0x11056A: main (so_long_bonus.c:112)
+==3615== 
+==3615== 
+==3615== HEAP SUMMARY:
+==3615==     in use at exit: 448 bytes in 4 blocks
+==3615==   total heap usage: 561,857 allocs, 561,902 frees, 12,657,246 bytes allocated
+==3615== 
+==3615== LEAK SUMMARY:
+==3615==    definitely lost: 0 bytes in 0 blocks
+==3615==    indirectly lost: 0 bytes in 0 blocks
+==3615==      possibly lost: 0 bytes in 0 blocks
+==3615==    still reachable: 0 bytes in 0 blocks
+==3615==         suppressed: 448 bytes in 4 blocks
+==3615== 
+==3615== ERROR SUMMARY: 51 errors from 3 contexts (suppressed: 734 from 3)
+==3615== 
+==3615== 1 errors in context 1 of 3:
+==3615== Invalid read of size 4
+==3615==    at 0x112352: render_next_frame (so_long_gameplay_bonus.c:134)
+==3615==    by 0x1157BC: mlx_loop (in /root/C/debugger/a.out)
+==3615==    by 0x111D69: init_mlx (so_long_init_mlx_bonus.c:135)
+==3615==    by 0x1104EC: init_game (so_long_bonus.c:96)
+==3615==    by 0x11056A: main (so_long_bonus.c:112)
+==3615==  Address 0x7be6f64 is 4 bytes inside a block of size 16 free'd
+==3615==    at 0x484B27F: free (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==3615==    by 0x114917: find_shortest_path (so_long_path_finder_bonus.c:711)
+==3615==    by 0x112311: render_next_frame (so_long_gameplay_bonus.c:130)
+==3615==    by 0x1157BC: mlx_loop (in /root/C/debugger/a.out)
+==3615==    by 0x111D69: init_mlx (so_long_init_mlx_bonus.c:135)
+==3615==    by 0x1104EC: init_game (so_long_bonus.c:96)
+==3615==    by 0x11056A: main (so_long_bonus.c:112)
+==3615==  Block was alloc'd at
+==3615==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==3615==    by 0x112557: c_alloc (so_long_ft_utils_bonus.c:19)
+==3615==    by 0x11294E: create_p (so_long_ft_utils_bonus.c:156)
+==3615==    by 0x11487E: find_shortest_path (so_long_path_finder_bonus.c:707)
+==3615==    by 0x112311: render_next_frame (so_long_gameplay_bonus.c:130)
+==3615==    by 0x1157BC: mlx_loop (in /root/C/debugger/a.out)
+==3615==    by 0x111D69: init_mlx (so_long_init_mlx_bonus.c:135)
+==3615==    by 0x1104EC: init_game (so_long_bonus.c:96)
+==3615==    by 0x11056A: main (so_long_bonus.c:112)
+==3615== 
+==3615== 
+==3615== 1 errors in context 2 of 3:
+==3615== Invalid read of size 4
+==3615==    at 0x112341: render_next_frame (so_long_gameplay_bonus.c:134)
+==3615==    by 0x1157BC: mlx_loop (in /root/C/debugger/a.out)
+==3615==    by 0x111D69: init_mlx (so_long_init_mlx_bonus.c:135)
+==3615==    by 0x1104EC: init_game (so_long_bonus.c:96)
+==3615==    by 0x11056A: main (so_long_bonus.c:112)
+==3615==  Address 0x7be6f60 is 0 bytes inside a block of size 16 free'd
+==3615==    at 0x484B27F: free (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==3615==    by 0x114917: find_shortest_path (so_long_path_finder_bonus.c:711)
+==3615==    by 0x112311: render_next_frame (so_long_gameplay_bonus.c:130)
+==3615==    by 0x1157BC: mlx_loop (in /root/C/debugger/a.out)
+==3615==    by 0x111D69: init_mlx (so_long_init_mlx_bonus.c:135)
+==3615==    by 0x1104EC: init_game (so_long_bonus.c:96)
+==3615==    by 0x11056A: main (so_long_bonus.c:112)
+==3615==  Block was alloc'd at
+==3615==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==3615==    by 0x112557: c_alloc (so_long_ft_utils_bonus.c:19)
+==3615==    by 0x11294E: create_p (so_long_ft_utils_bonus.c:156)
+==3615==    by 0x11487E: find_shortest_path (so_long_path_finder_bonus.c:707)
+==3615==    by 0x112311: render_next_frame (so_long_gameplay_bonus.c:130)
+==3615==    by 0x1157BC: mlx_loop (in /root/C/debugger/a.out)
+==3615==    by 0x111D69: init_mlx (so_long_init_mlx_bonus.c:135)
+==3615==    by 0x1104EC: init_game (so_long_bonus.c:96)
+==3615==    by 0x11056A: main (so_long_bonus.c:112)
+==3615== 
+==3615== 
+==3615== 49 errors in context 3 of 3:
+==3615== Invalid free() / delete / delete[] / realloc()
+==3615==    at 0x484B27F: free (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==3615==    by 0x114917: find_shortest_path (so_long_path_finder_bonus.c:711)
+==3615==    by 0x112311: render_next_frame (so_long_gameplay_bonus.c:130)
+==3615==    by 0x1157BC: mlx_loop (in /root/C/debugger/a.out)
+==3615==    by 0x111D69: init_mlx (so_long_init_mlx_bonus.c:135)
+==3615==    by 0x1104EC: init_game (so_long_bonus.c:96)
+==3615==    by 0x11056A: main (so_long_bonus.c:112)
+==3615==  Address 0x4e7c3a0 is 0 bytes inside a block of size 16 free'd
+==3615==    at 0x484B27F: free (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==3615==    by 0x112597: c_frr (so_long_ft_utils_bonus.c:31)
+==3615==    by 0x1147D8: trak_back_paths (so_long_path_finder_bonus.c:671)
+==3615==    by 0x114907: find_shortest_path (so_long_path_finder_bonus.c:710)
+==3615==    by 0x112311: render_next_frame (so_long_gameplay_bonus.c:130)
+==3615==    by 0x1157BC: mlx_loop (in /root/C/debugger/a.out)
+==3615==    by 0x111D69: init_mlx (so_long_init_mlx_bonus.c:135)
+==3615==    by 0x1104EC: init_game (so_long_bonus.c:96)
+==3615==    by 0x11056A: main (so_long_bonus.c:112)
+==3615==  Block was alloc'd at
+==3615==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==3615==    by 0x112557: c_alloc (so_long_ft_utils_bonus.c:19)
+==3615==    by 0x11294E: create_p (so_long_ft_utils_bonus.c:156)
+==3615==    by 0x11487E: find_shortest_path (so_long_path_finder_bonus.c:707)
+==3615==    by 0x112311: render_next_frame (so_long_gameplay_bonus.c:130)
+==3615==    by 0x1157BC: mlx_loop (in /root/C/debugger/a.out)
+==3615==    by 0x111D69: init_mlx (so_long_init_mlx_bonus.c:135)
+==3615==    by 0x1104EC: init_game (so_long_bonus.c:96)
+==3615==    by 0x11056A: main (so_long_bonus.c:112)
+==3615== 
+--3615-- 
+--3615-- used_suppression:      2 mlx_int_new_xshm_image suppressions.supp:18 suppressed: 448 bytes in 2 blocks
+--3615-- used_suppression:      2 XShmCreateImage suppressions.supp:2 suppressed: 272 bytes in 2 blocks
+--3615-- used_suppression:    732 X on SUSE11 writev uninit padding /usr/libexec/valgrind/default.supp:377
+==3615== 
+==3615== ERROR SUMMARY: 51 errors from 3 contexts (suppressed: 734 from 3)
