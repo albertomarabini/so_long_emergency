@@ -6,18 +6,13 @@
 /*   By: amarabin <amarabin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/27 17:24:07 by amarabin          #+#    #+#             */
-/*   Updated: 2023/08/06 12:04:09 by amarabin         ###   ########.fr       */
+/*   Updated: 2023/08/08 13:53:11 by amarabin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long_bonus.h"
 
-int	trn(int cond, int if_true, int if_false)
-{
-	if (cond)
-		return (if_true);
-	return (if_false);
-}
+
 t_point	*fnd_crn(t_point *ij, t_game *gm)
 {
 	t_point	rc;

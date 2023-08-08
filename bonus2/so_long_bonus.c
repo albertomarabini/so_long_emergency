@@ -6,7 +6,7 @@
 /*   By: amarabin <amarabin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/26 08:17:55 by amarabin          #+#    #+#             */
-/*   Updated: 2023/08/06 11:25:36 by amarabin         ###   ########.fr       */
+/*   Updated: 2023/08/08 10:10:16 by amarabin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,6 @@ static void	free_game(t_game *game)
 		c_frr("", game->map);
 	}
 	free_images(game);
-	c_frr("", game->tgt_el);
 	free_p(game->a_corners);
 	free_p(game->a_vills);
 	free_p(game->a_colls);
@@ -90,7 +89,8 @@ static t_game	*init_game(char *file)
 	game->exit = 0;
 	game->colls = 0;
 	game->vills = 0;
-	game->tgt_el = create_p(-1, -1, -1);
+	null_a(game->tgt_el, 3);
+	null_a(game->tgt_cr, 3);
 	game->hero_clock = c_alloc(sizeof(struct timespec));
 	game->vill_clock = c_alloc(sizeof(struct timespec));
 	if (fd < 0 || read_map(game, fd) == -1 || init_mlx(game) == -1)

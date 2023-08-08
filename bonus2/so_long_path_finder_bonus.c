@@ -6,13 +6,15 @@
 /*   By: amarabin <amarabin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 10:47:19 by amarabin          #+#    #+#             */
-/*   Updated: 2023/08/06 13:05:46 by amarabin         ###   ########.fr       */
+/*   Updated: 2023/08/08 14:19:01 by amarabin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long_bonus.h"
 
 /* DEBUG */
+// printf("curr_tgt_path\n");
+// printf("%s",mtostr(curr_tgt_path, gm->map_h, gm->map_w));
 char	*mtostr(int **matrix, int rows, int cols)
 {
 	int		length;
@@ -84,7 +86,7 @@ static int	*init_paths_row(t_game *game, int r)
 /**
  * initializes a new matrix of paths
  */
-static int	**init_paths_matrix(t_game *game)
+int	**init_paths_matrix(t_game *game)
 {
 	int	**paths;
 	int	r;
@@ -110,21 +112,32 @@ static int	**init_paths_matrix(t_game *game)
 	return (paths);
 }
 
-typedef struct s_point_pair
+int	len_paths_m(int ***paths)
+{
+	int	i;
+
+	i = 0;
+	while (paths[i] != NULL)
+		i++;
+	return (i);
+}
+
+typedef struct s_pair
 {
 	t_point		a;
 	t_point		b;
-}				t_point_pair;
+}				t_pair;
 
-// Function to instantiate a t_point_pair
-t_point_pair	create_pp(t_point a, t_point b)
+// Function to instantiate a t_pair
+t_pair	create_pp(t_point a, t_point b)
 {
-	t_point_pair	pair;
+	t_pair	pair;
 
 	pair.a = a;
 	pair.b = b;
 	return (pair);
 }
+
 
 void	print_point(t_point *p, const char *label)
 {
@@ -164,15 +177,135 @@ void	print_points(t_point **points, char *label)
 /**
  *we are using a inappropriately using a point as a collection of values
  */
-int	p_contains(t_point *p, int val)
+int	p_contains(t_point p, int val)
 {
-	return (p->r == val || p->c == val || p->val == val);
+	return (p.r == val || p.c == val || p.val == val);
 }
-void	p_shift(t_point *p, int val)
+t_point	p_shift(t_point p, int val)
 {
-	p->val = p->c;
-	p->c = p->r;
-	p->r = val;
+	p.val = p.c;
+	p.c = p.r;
+	p.r = val;
+	return (p);
+}
+
+/**
+ * Shifts an array and inserts a new head;
+ *
+ * @param a  The array to be rotated.
+ * @param head   The value to insert at the head(0) of the array
+ * @param length The length of the array.
+ */
+void	a_shift(int *a, int head, int length)
+{
+	int	i;
+
+	i = length - 1;
+	while (i > 0)
+	{
+		a[i] = a[i - 1];
+		i--;
+	}
+	a[0] = head;
+}
+
+/**
+ * Inserts all INT_MAX inside an array;
+ *
+ * @param a  The array to be nulled.
+ * @param length The length of the array.
+ */
+void	null_a(int *a, int length)
+{
+	int	i;
+
+	i = 0;
+	while (i < length)
+	{
+		a[i] = INT_MAX;
+		i++;
+	}
+}
+
+/**
+ * Verifies that an array is nulled
+ *
+ * @param a  The array to be rotated.
+ * @param length The length of the array.
+ */
+int	a_is_null(int *a, int length)
+{
+	int	i;
+
+	i = 0;
+	while (i < length)
+	{
+		if (a[i] != INT_MAX)
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
+/**
+ * Verifies that an array contains a value
+ *
+ * @param a  The array to be rotated.
+ * @param val The value to be checked.
+ * @param length The length of the array.
+ */
+int	a_contains(int *a, int val, int length)
+{
+	int	i;
+
+	i = 0;
+	while (i < length)
+	{
+		if (a[i] == val)
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
+/**
+ * Duplicates an array
+ *
+ * @param a  The array to be duplicated.
+ * @param b  The array destination
+ * @param length The length of the arrays.
+ */
+void	a_dup(int *a, int *b, int length)
+{
+	int	i;
+
+	i = 0;
+	while (i < length)
+	{
+		b[i] = a[i];
+		i++;
+	}
+}
+
+/**
+ * Compares two arrays to see if they have the same values in the same order
+ *
+ * @param a  The array to be duplicated.
+ * @param b  The array destination
+ * @param length The length of the arrays.
+ */
+int	a_cmp(int *a, int *b, int length)
+{
+	int	i;
+
+	i = 0;
+	while (i < length)
+	{
+		if (a[i] != b[i])
+			return (0);
+		i++;
+	}
+	return (1);
 }
 
 int	abs(int val)
@@ -182,7 +315,7 @@ int	abs(int val)
 	return (val);
 }
 
-int	len_o(void **o)
+int	len_oo(void **o)
 {
 	int	i;
 
@@ -202,6 +335,17 @@ int	len_p(t_point **p)
 	return (i);
 }
 
+t_point	clone_p(t_point *p)
+{
+	t_point	clone;
+
+	clone.r = p->r;
+	clone.c = p->c;
+	clone.val = p->val;
+	clone.val2 = p->val2;
+	return (clone);
+}
+
 /**
  * This function calculates the distance between two points in absolute terms
  * using Manhattan Geometry. The Manhattan Geometry is a particular type of
@@ -218,9 +362,9 @@ int	len_p(t_point **p)
  *
  * @note        The order of the input points does not affect the result.
  */
-int	manhtn_dst(t_point *p1, t_point *p2)
+int	manhtn_dst(t_point p1, t_point p2)
 {
-	return (abs(p1->r - p2->r) + abs(p1->c - p2->c));
+	return (abs(p1.r - p2.r) + abs(p1.c - p2.c));
 }
 
 /**
@@ -238,14 +382,13 @@ int	manhtn_dst(t_point *p1, t_point *p2)
 	&& BC < AC/1.5 (we factor in that ghosts are slower) we decide there
  * will be a crash.
  */
-int	manhtn_crash(t_point *a, t_point *b, t_point *c)
+int	manhtn_crash(t_point a, t_point b, t_point c)
 {
-	t_point	*tmp;
+	t_point	tmp;
 	int		ret;
 
-	tmp = create_p(manhtn_dst(a, b), manhtn_dst(a, c), manhtn_dst(b, c));
-	ret = tmp->r < tmp->c && tmp->val < tmp->c / 1.5;
-	c_frr("", tmp);
+	tmp = create_sp(manhtn_dst(a, b), manhtn_dst(a, c), manhtn_dst(b, c));
+	ret = tmp.r < tmp.c && tmp.val < tmp.c / 1.5;
 	return (ret);
 }
 
@@ -311,8 +454,8 @@ int	***concat_paths(int ***p1, int ***p2)
 
 	l1 = 0;
 	l2 = 0;
-	l1 = len_o((void **)p1);
-	l2 = len_o((void **)p2);
+	l1 = len_oo((void **)p1);
+	l2 = len_oo((void **)p2);
 	pc = (int ***)c_alloc(sizeof(int **) * (l1 + l2 + 1));
 	ft_memcpy(pc, p1, l1 * sizeof(int **));
 	ft_memcpy(pc + l1, p2, l2 * sizeof(int **));
@@ -323,17 +466,19 @@ int	***concat_paths(int ***p1, int ***p2)
 }
 
 /**
- * @brief This function computes all the possible paths to a point E 'pp->b' by
+ * @brief This function computes all the possible paths to a point E 'p.b' by
  * recursively exploring all the different paths sprouting of the start point
- *'pp->a'. The function stops the exploration if
- * 1)it reaches a point outside the map,
+ *'p.a'. The function stops the exploration if
+ * 1) it reaches a point outside the map
  * 2) if it encounters an obstacle ('P', 'V', 'D', '1' characters), depending
- * on the value of 'ptrn',
- * 3) or if the new step count `stp` is not less than the one recorded
- * by a different call to lay_paths
- * 4) or if it reaches the E position.
- * It doesn't need to returm anything because by the time it's done the paths
- * matrix will be filled with the shortest path from S to E (pp->a to pp->b).
+ * on the values contained in 'ptrn'
+ * 3) if the new step count a is carrying in val is not less than the one
+ * recorded by a different call to lay_paths at the current
+ * path[p.a.r][p.a.c]
+ * 4) or if it reaches the p.b position (end).
+ * It doesn't need to returm anything because by the time it's done the path
+ * matrix will be filled with the shortest paths from the start to the end
+ * points (p.a to p.b).
  *
  * For example, starting from the following map:
  * 	E _ _ _ _ _
@@ -351,54 +496,51 @@ int	***concat_paths(int ***p1, int ***p2)
  * 	6 O 4 3 O 1
  * 	5 4 3 2 1 S
  *
- * @param pp Contains the starting position a and the end position b.
- * @param paths Matrix that will store all the computed paths to b
+ * @param p Contains the starting position a and the end position b.
+ *           a.val should be initialized to 0
+ * @param pth The matrix that will store all the computed paths to b
  * @param gm The current state of the game.
  * @param ptrn The pattern of characters in the map to be avoided.
  *        Example: for villain is E1, for hero with collectibles is EVC1,
  *        for hero without collectibles is EV1
  *
- * @remark `pp` and 'pp->a' are freed at the end of each call to this function.
  * @remark 'V' positions are going to be replaced in the map once villains move
  */
-static void	lay_paths(t_point_pair pp, int **paths, t_game *gm, char *ptrn)
+static void	lay_paths(t_pair p, int **pth, t_game *gm, char *ptrn)
 {
-	t_point_pair	pr;
+	t_pair	pr;
 
-	if (pp.a.val > 0)
+	if (p.a.val > 0)
 	{
-		// print_point(pp->a,"a");
-		// print_point(pp->b,"b");
-		// char c= gm->map[pp->a->r][pp->a->c];
-		// printf("paths value=%d, map value=%c\n", paths[pp->a->r][pp->a->c], c);
-		if ((pp.a.r < 0 || pp.a.r >= gm->map_h || pp.a.c < 0 || pp.a.c >= gm->map_w) ||
-		strchr(ptrn,gm->map[pp.a.r][pp.a.c]) || pp.a.val >= paths[pp.a.r][pp.a.c]
-			|| (pp.a.r == pp.b.r && pp.a.c == pp.b.c))
+		if ((p.a.r < 1 || p.a.r > gm->map_h - 2 || p.a.c < 1
+				|| p.a.c > gm->map_w - 2) || strchr(ptrn, gm->map[p.a.r][p.a.c])
+			|| p.a.val >= pth[p.a.r][p.a.c] || (p.a.r == p.b.r
+				&& p.a.c == p.b.c))
 		{
+			if (p.a.r == p.b.r && p.a.c == p.b.c && p.a.val < pth[p.a.r][p.a.c])
+				pth[p.a.r][p.a.c] = p.a.val;
 			return ;
 		}
 	}
-	paths[pp.a.r][pp.a.c] = pp.a.val;
-	// printf("lay_paths:\n");
-	// printf("%s", mtostr(paths, 5, 6));
-	pr.a = create_sp(pp.a.r - 1, pp.a.c, pp.a.val + 1);
-	pr.b = pp.b;
-	lay_paths(pr, paths, gm, ptrn);
-	pr.a = create_sp(pp.a.r + 1, pp.a.c, pp.a.val + 1);
-	lay_paths(pr, paths, gm, ptrn);
-	pr.a = create_sp(pp.a.r, pp.a.c - 1, pp.a.val + 1);
-	lay_paths(pr, paths, gm, ptrn);
-	pr.a = create_sp(pp.a.r, pp.a.c + 1, pp.a.val + 1);
-	lay_paths(pr, paths, gm, ptrn);
+	pth[p.a.r][p.a.c] = p.a.val;
+	pr.a = create_sp(p.a.r - 1, p.a.c, p.a.val + 1);
+	pr.b = p.b;
+	lay_paths(pr, pth, gm, ptrn);
+	pr.a = create_sp(p.a.r + 1, p.a.c, p.a.val + 1);
+	lay_paths(pr, pth, gm, ptrn);
+	pr.a = create_sp(p.a.r, p.a.c - 1, p.a.val + 1);
+	lay_paths(pr, pth, gm, ptrn);
+	pr.a = create_sp(p.a.r, p.a.c + 1, p.a.val + 1);
+	lay_paths(pr, pth, gm, ptrn);
 }
 
-int	alloc_path_structs(int n, int ****c_paths, t_point ****c_points)
+int	alloc_path_structs(int n, int ****c_paths_m, t_point ****c_points)
 {
-	*c_paths = (int ***)c_alloc(sizeof(int **) * (n + 1));
+	*c_paths_m = (int ***)c_alloc(sizeof(int **) * (n + 1));
 	**c_points = (t_point **)c_alloc(sizeof(t_point *) * (n + 1));
-	if (!*c_paths || !**c_points)
+	if (!*c_paths_m || !**c_points)
 	{
-		c_frr("", *c_paths);
+		c_frr("", *c_paths_m);
 		c_frr("", *c_points);
 		return (0);
 	}
@@ -409,9 +551,8 @@ int	alloc_path_structs(int n, int ****c_paths, t_point ****c_points)
  * Calculates the paths for each corner of the game.
  * @param n         The number of a_corners we want to use
  * @param game      The game.
-
-	* @param c_points  Pointer to the array of t_point which will store the a_corners.
-
+ * @param c_points  Pointer to the array of t_point which will store the
+ *                  a_corners.
  * @return      A 3D array of integer representing the paths from each corner
  *              to the hero. The last element of the outermost array is set
  *              to NULL as a sentinel.
@@ -421,51 +562,33 @@ int	***collect_corner_paths(int n, t_game *gm, t_point ***c_points,
 		char *pattern_c)
 {
 	int		i;
-	t_point	*stt;
-	t_point	*hero;
-	int		***c_paths;
+	t_point	stt;
+	t_point	hero;
+	t_point	*c;
+	int		***c_paths_m;
 
 	i = 0;
 	if (n > 4)
 		n = 4;
-	if (!alloc_path_structs(n, &c_paths, &c_points))
+	if (!alloc_path_structs(n, &c_paths_m, &c_points))
 		return (NULL);
-	hero = create_p(gm->hero_r, gm->hero_c, INT_MAX);
+	hero = create_sp(gm->hero_r, gm->hero_c, 0);
 	while (i < n)
 	{
-		(*c_points)[i] = gm->a_corners[i];
-		c_paths[i] = init_paths_matrix(gm);
-		if (!c_paths[i])
+		c = gm->a_corners[i];
+		(*c_points)[i] = create_p(c->r, c->c, c->val);
+		c_paths_m[i] = init_paths_matrix(gm);
+		if (!c_paths_m[i])
 			return (NULL);
-		stt = create_p(gm->a_corners[i]->r, gm->a_corners[i]->c, 0);
-		lay_paths(create_pp(*stt, *hero), c_paths[i], gm, pattern_c);
-		c_frr("", stt);
+		stt = create_sp(gm->a_corners[i]->r, gm->a_corners[i]->c, 0);
+		lay_paths(create_pp(stt, hero), c_paths_m[i], gm, pattern_c);
 		i++;
 	}
-	c_paths[i] = NULL;
+	c_paths_m[i] = NULL;
 	(*c_points)[i] = NULL;
-	c_frr("", hero);
-	return (c_paths);
+	return (c_paths_m);
 }
 
-int	adjust_by_corners(t_point ****c_points, int ****c_paths, t_game *gm,
-		char *pattern_c)
-{
-	t_point	**corn_points;
-	int		***corn_paths;
-	int		i;
-
-	i = len_p(**c_points);
-	if (i < 4)
-	{
-		corn_points = NULL;
-		corn_paths = collect_corner_paths(4 - i, gm, &corn_points, pattern_c);
-		if (!corn_paths || !corn_points)
-			return (0);
-		*c_paths = concat_paths(*c_paths, corn_paths);
-		**c_points = concat_p(**c_points, corn_points);
-	}
-}
 /**
  * Calculates the paths for each exit of the game.
  *
@@ -483,28 +606,28 @@ int	***collect_exit_paths(t_game *gm, t_point ***c_points, char *pattern_c)
 	int		i;
 	t_point	*stt;
 	t_point	*hero;
-	int		***c_paths;
+	int		***c_paths_m;
 
 	i = 0;
-	if (!alloc_path_structs(len_p(gm->a_exits), &c_paths, &c_points))
+	if (!alloc_path_structs(len_p(gm->a_exits), &c_paths_m, &c_points))
 		return (NULL);
 	hero = create_p(gm->hero_r, gm->hero_c, INT_MAX);
 	while (gm->a_exits[i])
 	{
-		(*c_points)[i] = gm->a_exits[i];
-		c_paths[i] = init_paths_matrix(gm);
-		if (!*c_paths[i])
+		(*c_points)[i] = create_p2(gm->a_exits[i]->r, gm->a_exits[i]->c,
+			gm->a_exits[i]->val, gm->a_exits[i]->val2);
+		c_paths_m[i] = init_paths_matrix(gm);
+		if (!*c_paths_m[i])
 			return (NULL);
 		stt = create_p(gm->a_exits[i]->r, gm->a_exits[i]->c, 0);
-		lay_paths(create_pp(*stt, *hero), c_paths[i], gm, pattern_c);
+		lay_paths(create_pp(*stt, *hero), c_paths_m[i], gm, pattern_c);
 		c_frr("", stt);
 		i++;
 	}
-	c_paths[i] = NULL;
+	c_paths_m[i] = NULL;
 	(*c_points)[i] = NULL;
-	// adjust_by_corners(&c_points, &c_paths, gm, pattern_c);
 	c_frr("", hero);
-	return (c_paths);
+	return (c_paths_m);
 }
 /**
  * Calculates the paths for each collectible not yet collected in the
@@ -527,11 +650,11 @@ int	***collect_coll_paths(t_game *gm, t_point ***c_points, char *pattern_c)
 	int		j;
 	t_point	*stt;
 	t_point	*hero;
-	int		***c_paths;
+	int		***c_paths_m;
 
 	i = 0;
 	j = 0;
-	if (!alloc_path_structs(len_p(gm->a_colls), &c_paths, &c_points))
+	if (!alloc_path_structs(len_p(gm->a_colls), &c_paths_m, &c_points))
 		return (NULL);
 	j = 0;
 	hero = create_p(gm->hero_r, gm->hero_c, INT_MAX);
@@ -539,21 +662,21 @@ int	***collect_coll_paths(t_game *gm, t_point ***c_points, char *pattern_c)
 	{
 		if (gm->a_colls[j]->val == 0)
 		{
-			(*c_points)[i] = gm->a_colls[j];
-			c_paths[i++] = init_paths_matrix(gm);
-			if (!c_paths[i - 1])
+			(*c_points)[i] = create_p2(gm->a_colls[j]->r, gm->a_colls[j]->c,
+				gm->a_colls[j]->val, gm->a_colls[j]->val2);
+			c_paths_m[i++] = init_paths_matrix(gm);
+			if (!c_paths_m[i - 1])
 				return (NULL);
 			stt = create_p(gm->a_colls[j]->r, gm->a_colls[j]->c, 0);
-			lay_paths(create_pp(*stt, *hero), c_paths[i - 1], gm, pattern_c);
+			lay_paths(create_pp(*stt, *hero), c_paths_m[i - 1], gm, pattern_c);
 			c_frr("", stt);
 		}
 		j++;
 	}
-	c_paths[i] = NULL;
+	c_paths_m[i] = NULL;
 	(*c_points)[i] = NULL;
-	// adjust_by_corners(&c_points, &c_paths, gm, pattern_c);
 	c_frr("", hero);
-	return (c_paths);
+	return (c_paths_m);
 }
 
 /**
@@ -568,45 +691,31 @@ int	***collect_coll_paths(t_game *gm, t_point ***c_points, char *pattern_c)
  */
 int	***collect_vill_paths(t_game *game)
 {
-	int		***v_paths;
+	int		***v_paths_m;
 	int		i;
 	t_point	*stt;
 	t_point	*hero;
 
 	i = 0;
 	hero = create_p(game->hero_r, game->hero_c, INT_MAX);
-	v_paths = (int ***)c_alloc(sizeof(int **) * (game->vills + 1));
-	if (!v_paths)
+	v_paths_m = (int ***)c_alloc(sizeof(int **) * (game->vills + 1));
+	if (!v_paths_m)
 	{
-		c_frr("", v_paths);
+		c_frr("", v_paths_m);
 		return (NULL);
 	}
 	while (i < game->vills)
 	{
-		v_paths[i++] = init_paths_matrix(game);
-		if (!v_paths[i - 1])
+		v_paths_m[i++] = init_paths_matrix(game);
+		if (!v_paths_m[i - 1])
 			return (NULL);
 		stt = create_p(game->a_vills[i - 1]->r, game->a_vills[i - 1]->c, 0);
-		lay_paths(create_pp(*stt, *hero), v_paths[i - 1], game, "E1");
+		lay_paths(create_pp(*stt, *hero), v_paths_m[i - 1], game, "E1");
 		c_frr("", stt);
 	}
-	v_paths[i] = NULL;
+	v_paths_m[i] = NULL;
 	c_frr("", hero);
-	return (v_paths);
-}
-
-/**
- * Is a companion to the function trak_back_paths:
- * once track_back_path finds the next step in the path this creates the point
- * structure for it and frees the old one.
- */
-static t_point	*f_n_b(t_point **src, t_point *p)
-{
-	if (p == NULL)
-		return (NULL);
-	c_frr("", *src);
-	*src = p;
-	return (p);
+	return (v_paths_m);
 }
 
 /**
@@ -636,44 +745,39 @@ static t_point	*f_n_b(t_point **src, t_point *p)
  * @param paths The matrix computed by lay_paths
  * @param game  The game
  * @param tb    Flag to block the trackback (is used to calculate distances)
- *              1 will trackback, 0 will not and stop at the smallest point
+ *              1 will trackback, 0 will not.
+ *              will be returned the correct distance paths[t.r][t.c]
  * @return Pointer to the `t_point` that represents the next move.
  *
  * @remark The input `t_point` struct `t` is freed in each recursive call.
- * @remark each f_n_b call frees the old point and creates a new one. The
- * return (NULL) in the if's is to deal with a failure in such creation.
+ * @remark it returns null_p() if all paths to t are blocked
  * @remark When used in the not track back mode it will return not only
  * the point with the smallest distance (p->val) but also the direction
  * of the move (0=up, 1=right, 2=down, 3=left)
  */
-t_point	*trak_back_paths(t_point *t, int **paths, t_game *game/*int tb*/)
+t_point	trak_back_paths(t_point t, int **paths, t_game *game, int tb)
 {
-	t_point	*next_p;
+	t_point	next_p;
 
-	next_p = create_p(t->r, t->c, paths[t->r][t->c]);
-	if (t->r > 0 && paths[t->r - 1][t->c] < next_p->val && !f_n_b(&next_p,
-			create_p2(t->r - 1, t->c, paths[t->r - 1][t->c], 0)))
-		return (NULL);
-	if (t->r < game->map_h - 1 && paths[t->r + 1][t->c] < next_p->val
-		&& !f_n_b(&next_p, create_p2(t->r + 1, t->c, paths[t->r + 1][t->c], 2)))
-		return (NULL);
-	if (t->c > 0 && paths[t->r][t->c - 1] < next_p->val && !f_n_b(&next_p,
-			create_p2(t->r, t->c - 1, paths[t->r][t->c - 1], 1)))
-		return (NULL);
-	if (t->c < game->map_w - 1 && paths[t->r][t->c + 1] < next_p->val
-		&& !f_n_b(&next_p, create_p2(t->r, t->c + 1, paths[t->r][t->c + 1], 1)))
-		return (NULL);
-	if (next_p->val == 0)
-	{
-		c_frr("", next_p);
+	next_p = create_sp(t.r, t.c, paths[t.r][t.c]);
+	if (t.r > 0 && paths[t.r - 1][t.c] < next_p.val)
+		next_p = create_sp2(t.r - 1, t.c, paths[t.r - 1][t.c], 0);
+	if (t.r < game->map_h - 1 && paths[t.r + 1][t.c] < next_p.val)
+		next_p = create_sp2(t.r + 1, t.c, paths[t.r + 1][t.c], 2);
+	if (t.c > 0 && paths[t.r][t.c - 1] < next_p.val)
+		next_p = create_sp2(t.r, t.c - 1, paths[t.r][t.c - 1], 1);
+	if (t.c < game->map_w - 1 && paths[t.r][t.c + 1] < next_p.val)
+		next_p = create_sp2(t.r, t.c + 1, paths[t.r][t.c + 1], 1);
+	if (next_p.val == 0)
 		return (t);
+	if (next_p.val == INT_MAX)
+		return (null_p());
+	if (!tb)
+	{
+		next_p.val = paths[t.r][t.c];
+		return (next_p);
 	}
-	c_frr("", t);
-	if (next_p->val == INT_MAX)
-		return (NULL);
-	// if (!tb)
-	// 	return (next_p);
-	return (trak_back_paths(next_p, paths, game/*, 1*/));
+	return (trak_back_paths(next_p, paths, game, 1));
 }
 
 /**
@@ -682,7 +786,7 @@ t_point	*trak_back_paths(t_point *t, int **paths, t_game *game/*int tb*/)
  * If a move is not possible (or something happens in the middle),
  * it returns NULL.
  * We make a copy of start because lay_paths will c_frr the corresponding
- * point (as well as the t_point_pair carrying it).
+ * point (as well as the t_pair carrying it).
  * The same is true for trak_back_paths
  * (so ret = trak_back_paths(ret, paths, game); is ok)
  *
@@ -693,29 +797,31 @@ t_point	*trak_back_paths(t_point *t, int **paths, t_game *game/*int tb*/)
  *              1 will trackback, 0 will not and stop at the smallest point
  * @return      The next best move
  */
-t_point	*find_shortest_path(t_point *start, t_point *end, t_game *game/*, int tb*/)
+t_point	find_shortest_path(t_point start, t_point end, t_game *game, int tb)
 {
-	int				**paths;
-	t_point_pair	pr;
-	t_point			*tmp;
-	t_point			*ret;
-	int				min;
+	int		**path;
+	t_pair	pr;
+	t_point	nxt;
+	int		min;
 
-	paths = init_paths_matrix(game);
-	if (!paths)
-		return (NULL);
-	tmp = create_p(end->r, end->c, INT_MAX);
-	pr = create_pp(create_sp(start->r, start->c, 0), *tmp);
-	lay_paths(pr, paths, game, "E1");
-	ret = trak_back_paths(tmp, paths, game/*, tb*/);
-	free(tmp);
-	free_paths(paths);
-	return (ret);
+	path = init_paths_matrix(game);
+	if (!path)
+		return (null_p());
+	pr = create_pp(create_sp(start.r, start.c, 0), end);
+	lay_paths(pr, path, game, "E1");
+	nxt = trak_back_paths(end, path, game, tb);
+	free_paths(path);
+	return (nxt);
 }
 
 /**
  * Calculates the shortest distance between two points without any
  * consideration on what the obstacles might be in the way, beside walls.
+ * It also return the direction that has to be taken to reach end from start
+ * (0=up, 1=right, 2=down, 3=left) in the val2 field of the point
+ * make sure to understand wich is the actual starting point because the
+ * distance is the same but the direction (given the number of obstacles in
+ * the game) can be very different, not simply the opposite
  *
  * @param start The starting point.
  * @param end   The target or end point.
@@ -723,95 +829,101 @@ t_point	*find_shortest_path(t_point *start, t_point *end, t_game *game/*, int tb
  *
  * @return      The point in one the cardinals of the start point
  *              (0=up, 1=right, 2=down, 3=left) carrying the shortest
- 				distance between start and end points.
+				distance between start and end points.
  *              If path calculation fails or memory allocation fails,
  *              returns NULL.
  */
-t_point	*find_distance(t_point *start, t_point *end, t_game *game)
+t_point	find_distance(t_point start, t_point end, t_game *game)
 {
-	t_point	*t;
+	t_point	t;
 
-	//t = find_shortest_path(start, end, game, 0);
-	if(!t)
-		return (NULL);
-	if (t->val == INT_MAX)
-		t->val = 0;
+	t = find_shortest_path(start, end, game, 0);
+	if (is_null_p(t))
+		return (t);
+	if (t.val == INT_MAX)
+		t.val = 0;
 	return (t);
 }
 
 /**
- * Given A, B, C it will find out if a point  A will be able to reach a point
- * C before another moving object B will be able to.  These are scenarios
- * where A will be able to reach C safely before to get caught by C
+ * Given A, B, T it will find out if smthg at point A will be able to reach
+ * smthg at point T before another moving object B will be able to.
  * Think of a one way street where we have a car A moving faster than the
- * car B. Both must collect something at point C (target). I need to calculate
- * if A will be able to reach C and turn back before to crash on B
- * B          A
- *  A     AND  C
- *   C          B
- * if BC > BC && AB < BC || AB > AC && CB < AB
- * if AB < AC && BC < AC/1.5 (we factor in that ghosts are slower)
- * we decide there will be a crash.
- (0=up, 1=right, 2=down, 3=left)
- * case 1) B A C
+ * car B. A must collect something at point T, B is chasing A.
+ * We need to calculate if A will be able to reach C and turn back before
+ * to crash on B
+ * We are going to factor in also the direction
+ * (0=up, 1=right, 2=down, 3=left)
+ * ALIGNED CASES (all moving on the same axis, quite likely at close up)
+ * case 1) B A T
+ * if (at.val < bt.val && at.val2 == ba.val2)
  * if B is moving in the same direction as A it will never catch
- * case 2) A C B
- * if B is moving in the opposite direction as A but AB>AC it will catch up only if BC < AC/1.5
- * case 3) A B C
- * if B is moving in the opposite direction as B but AB<AC better go away
+ * case 2) A T B
+ * if (ba.val >at.val && ba.val2 == bt.val2 && bt.val <
+ * (at.val / 1.5))
+ * if B is moving in the opposite direction as A but AB>AT it will catch up
+ * only if BT < AT/1.5
+ * case 3) A B T
+ * if (ba.val < at.val && ba.val2 == (at.val2 + 2) % 4)
+ * if B is moving in the opposite direction as A but AB<AT better run
+ * UNALIGNED CASES
  * case 4)
- * if B is moving in any other direction i would say "maybe". That means if at the next interaction we find out that B is closer
- * maybe is reaching A from another angle. But maybe is quite safe to say BC<AC maybe is not so safe to pursuit
+ * T
+ * |\
+ * | \
+ * |  \
+ * B---A
+ * if (bt.val < at.val / 1.5)
+ * we are trying to understand if, while we get closer to the
+ * target, B will be able to catch up on A while he's adapting to A's
+ * change in position.
  */
-int	will_it_crash(t_point *a, t_point *b, t_point *c, t_game *gm)
+int	will_it_crash(t_point a, t_point b, t_point t, t_game *gm)
 {
-	t_point	*ac;
-	t_point	*ba;
-	t_point	*bc;
-	int	ret;
+	t_point	at;
+	t_point	ba;
+	t_point	bt;
+	int		ret;
 
-	if(ba->val2 == ac->val2)
-
-	ac = find_distance(a, b, gm);
-	ba = find_distance(a, c, gm);
-	bc = find_distance(b, c, gm);
-
-    // Case 1: B A C
-    if (ac->val < bc->val && ac->val2 == ba->val2)
-        return 0;
-    // Case 2: A C B
-    else if (ba->val > bc->val && ba->val2 == bc->val2 && bc->val < (ac->val / 1.5))
-		return 1;
-	// Case 3) A B C
-	else if (ba->val < ac->val && ba->val2 == (bc->val2 + 2) %4)
-		return 1;
-	else if(ac->val < bc->val)
-	//else if(ba->val < ac->val && bc->val < ac->val / 1.5)
-		return 1;
-	return 0;
+	at = find_distance(a, t, gm);
+	ba = find_distance(b, a, gm);
+	bt = find_distance(b, t, gm);
+	if (at.val < bt.val && at.val2 == ba.val2)
+		return (0);
+	else if (ba.val > bt.val && ba.val > at.val && ba.val2 == bt.val2
+		&& bt.val < (at.val / 1.5))
+		return (1);
+	else if (ba.val < at.val && ba.val2 == (at.val2 + 2) % 4)
+		return (1);
+	else if (bt.val < at.val / 1.5)
+		return (1);
+	return (0);
 }
 
-//     // Case 3: Any other direction
-//     if (input.dirB != input.dirA && input.dirB != (input.dirA + 2) % 4) {
-//         if (input.BC < input.AC) {
-//             return "Maybe (B is approaching)";
-//         }
-//     }
-
-//     return "Go to C (safe)";
-// }
-// 	//Scenario A B C
-
-// 	//ret = !(bc > ac && ab < bc || ab > ac && bc < ab);
-// 	if(ab->val2 == ac->val2 && ac->val2 == bc->val2)
-// 	ret = ab < ac && bc < ac / 1.5;
-// 	// printf("AB %i AC %i BC %i RET %i\n", ab, ac, bc, ret);
-// 	// printf("MC %i\n", manhtn_crash(a, b, c));
-// 	return (ret);
-// }
-
 /**
- * @brief Finds the a new object to target in the possible list of objects
+ * Creates an array of potential paths to reach the targets (either
+ * collectibles or villains) from the variable pts collecting the
+ * 4 cardinals around the current point p for each path.
+ */
+static t_point	**pot_tgt_moves(int ***pts, int len_pts, t_point p)
+{
+	t_point	**movs;
+	int		i;
+
+	movs = (t_point **)c_alloc(sizeof(t_point *) * (len_pts * 4 + 1));
+	i = 0;
+	while (pts[i] != NULL)
+	{
+		movs[i * 4] = create_p2(p.r - 1, p.c, pts[i][p.r - 1][p.c], i);
+		movs[i * 4 + 1] = create_p2(p.r + 1, p.c, pts[i][p.r + 1][p.c], i);
+		movs[i * 4 + 2] = create_p2(p.r, p.c - 1, pts[i][p.r][p.c - 1], i);
+		movs[i * 4 + 3] = create_p2(p.r, p.c + 1, pts[i][p.r][p.c + 1], i);
+		movs[++i * 4] = NULL;
+	}
+	return (movs);
+}
+/**
+ * Finds the a new object to target in the possible list of objects
  * to track down.
  * First we find out what paths to reach the targets (either collectibles
  * or villains) contained within the variable pts are the shortest
@@ -821,35 +933,107 @@ int	will_it_crash(t_point *a, t_point *b, t_point *c, t_game *gm)
  * t_point curr is used inappropriately to hold a list of the last target
  * examined so to not pursue always the same object. The one newly
  * selected will be held in the r value of the point.
+ * If none is found it will try to reset the search.
  */
-t_point	*sel_new_tgt_obj(int ***pts, t_point *p, t_point *curr)
+void	sel_new_tgt_obj(int ***pts, int len_pts, t_point p, int (*curr)[3])
 {
 	t_point	**movs;
 	int		i;
 
+	i = 4 * len_pts;
+	movs = pot_tgt_moves(pts, len_pts, p);
+	sort_p(movs, i);
 	i = 0;
-	while (pts[i] != NULL)
+	while (movs[i] != NULL && a_contains(*curr, movs[i]->val2, 3))
 		i++;
-	movs = (t_point **)c_alloc(sizeof(t_point *) * (i * 4 + 1));
-	i = 0;
-	while (pts[i] != NULL)
+	if (movs[i] != NULL)
+		a_shift(*curr, movs[i]->val2, 3);
+	else
 	{
-		// printf("curr_path:%i\n", i);
-		// printf("%s", mtostr(pts[i], 16, 29));
-		movs[i * 4] = create_p2(p->r - 1, p->c, pts[i][p->r - 1][p->c], i);
-		movs[i * 4 + 1] = create_p2(p->r + 1, p->c, pts[i][p->r + 1][p->c], i);
-		movs[i * 4 + 2] = create_p2(p->r, p->c - 1, pts[i][p->r][p->c - 1], i);
-		movs[i * 4 + 3] = create_p2(p->r, p->c + 1, pts[i][p->r][p->c + 1], i);
+		null_a(*curr, 3);
+		a_shift(*curr, movs[0]->val2, 3);
+	}
+	free_p(movs);
+}
+
+/**
+ * Does the same thing as sel_new_tgt_obj but tailored for corners
+ * (we need to find the farthest reacheable, not the closest)
+ */
+void	sel_new_tgt_corn(int ***pts, int len_pts, t_point p, int (*curr)[3])
+{
+	t_point	**movs;
+	int		i;
+
+	i = 4 * len_pts;
+	movs = pot_tgt_moves(pts, len_pts, p);
+	rev_p(sort_p(movs, i), i);
+	i = 0;
+	while (movs[i] != NULL)
+	{
+		if (movs[i]->val != INT_MAX && !a_contains(*curr, movs[i]->val2, 3))
+			break ;
 		i++;
 	}
-	movs[i * 4] = NULL;
-	sort_p(movs, 4 * i);
-	i = 0;
-	while (movs[i] != NULL && p_contains(curr, movs[i]->val2))
-		i++;
-	p_shift(curr, movs[i]->val2);
+	if (movs[i] != NULL)
+		a_shift(*curr, movs[i]->val2, 3);
+	else
+		null_a(*curr, 3);
 	free_p(movs);
-	return (curr);
+}
+
+/**
+ * Uses Manhattan geometry principles to find if the closest
+ * approaching villain will be able to reach the hero before it reaches the
+ * target (whatever the target might be).
+ * @param   t           The game.
+ * @param   gm          The game.
+ * @param   c_points    Array of collectible coordinates (or exits when
+ *                      the collectibles are exausted)
+ * @param   v_paths_m   The paths toward the hero of all the villains in
+ *                      the field from where we select the closest only.
+ * @param   pattern_c   String used to lay down a valid path toward a
+ *                      collectible as per the lay_paths function
+ *
+ * @return      A pointer to a t_point which represents the best path for the
+ *              hero from the it's current position to reach the target.
+ *              The 'val' field of this t_point
+ *              contains the Manhattan crash result test with the closest
+ *              approaching villain.
+ *
+ * Internal workings:
+ * The function first initializes a paths matrix. It then creates a start point
+ * point for the hero and fills the path using lay_paths.
+ * It then select as target object the closest villains and computes the
+ * potential collision with the hero
+ */
+static t_point	is_path_to_tgt_safe(t_point t, t_game *gm, int ***v_paths_m, char *pattern_c)
+{
+	int		**curr_tgt_path;
+	t_point	strt;
+	t_point	nxt;
+	int		tgt_v[3];
+	int i;
+
+	curr_tgt_path = init_paths_matrix(gm);
+	if (!curr_tgt_path)
+		return (null_p());
+	strt = create_sp(gm->hero_r, gm->hero_c, 0);
+	lay_paths(create_pp(strt, t), curr_tgt_path, gm, pattern_c);
+	nxt = trak_back_paths(t, curr_tgt_path, gm, 1);
+	if (is_null_p(nxt))
+		return (nxt);
+	i = 0;
+	null_a(tgt_v, 3);
+	while (trn(gm->vills > 4, 4, gm->vills) > i++)
+	{
+		sel_new_tgt_obj(v_paths_m, len_paths_m(v_paths_m), t, &tgt_v);
+		nxt.val = will_it_crash(strt, *(gm->a_vills[tgt_v[0]]), t, gm);
+		if(nxt.val)
+			break;
+	}
+	free_paths(curr_tgt_path);
+	return (nxt);
 }
 
 /**
@@ -860,66 +1044,77 @@ t_point	*sel_new_tgt_obj(int ***pts, t_point *p, t_point *curr)
  * The current collectible (as mentioned in sel_new_tgt_obj) is held in the
  * r value of game->tgt_el as a position in the c_points array of collectible
  * coordinates calculated within the calling function.
- * It then uses Manhattan geometry principles to find if the closest
- * approaching villain will be able to reach the hero before it reaches the
- * collectible. If so the calling function will try to find another collectible
- * to go to. The potential crash condition is calculated by passing back the
- * result of manhtn_crash within the val value of the returnd t_point.
+ * If the path is unsafe the calling function will try to find another tgt
+ * to go to.
  * The returned t_point will b the actual coordinates of the next step in the
  * jurney toward the collectible.
  *
  * @param[in]   gm          The game.
  * @param[in]   c_points    Array of collectible coordinates (or exits when
  *                          the collectibles are exausted)
- * @param[in]   v_paths     The paths toward the hero of all the villains in
+ * @param[in]   v_paths_m     The paths toward the hero of all the villains in
  *                          the field from where we select the closest only.
  * @param[in]   pattern_c   String used to lay down a valid path toward a
  *                          collectible as per the lay_paths function
  *
  * @return      A pointer to a t_point which represents the best path for the
  *              hero from the it's current position to reach the collectible
- *              indexed by gm->tgt_el->r. The 'val' field of this t_point
+ *              indexed by gm->tgt_el[0]. The 'val' field of this t_point
  *              contains the Manhattan crash result test with the closest
  *              approaching villain.
  *
  * Internal workings:
- * The function first initializes a paths matrix. It then creates a start point
- * for the current target element (coll or exit) and an end point for the hero.
- * and fills the path using lay_paths. It then select as target object the
- * closest villain and computes the potential collision between the hero, and
- * the villain while reaching for the current target.
+ * The function creates an end point for the current target element
+ * (coll or exit) and pass it to is_path_to_tgt_safe to find a safe
+ * path to it.
  */
-t_point	*is_path_to_curr_tgt_safe(t_game *gm, t_point **c_points,
-		int ***v_paths, char *pattern_c)
+t_point	is_path_to_curr_tgt_safe(t_game *gm, t_point **c_points,
+		int ***v_paths_m, char *pattern_c)
 {
-	int		**curr_tgt_path;
-	t_point	*stt;
-	t_point	*end;
-	t_point	*target_v;
-	int		d;
+	t_point	end;
 
-	d = gm->colls;
-	curr_tgt_path = init_paths_matrix(gm);
-	if (!curr_tgt_path)
-		return (NULL);
-	end = create_p(c_points[gm->tgt_el->r]->r, c_points[gm->tgt_el->r]->c,
-		INT_MAX);
-	stt = create_p(gm->hero_r, gm->hero_c, 0);
-	lay_paths(create_pp(*stt,*end), curr_tgt_path, gm, pattern_c);
-	// printf("curr_tgt_path\n");
-	// printf("%s",mtostr(curr_tgt_path, gm->map_h, gm->map_w));
-	end = trak_back_paths(end, curr_tgt_path, gm/*, 1*/);
-	// print_point(end,"Best Move");
-	// print_point(gm->tgt_el,"Current Target");
-	target_v = sel_new_tgt_obj(v_paths, end, create_p(-1, -1, -1));
-	// end->val = will_it_crash(stt, gm->a_vills[target_v->r],
-	// 	c_points[gm->tgt_el->r], gm);
-	end->val = manhtn_crash(stt, gm->a_vills[target_v->r],
-		c_points[gm->tgt_el->r]);
-	c_frr("", stt);
-	c_frr("", target_v);
-	free_paths(curr_tgt_path);
+	end = create_sp(c_points[gm->tgt_el[0]]->r, c_points[gm->tgt_el[0]]->c, 0);
+	end = is_path_to_tgt_safe(end, gm, v_paths_m, pattern_c);
 	return (end);
+}
+
+/**
+ * Does the same thing as is_path_to_curr_tgt_safe but tailored for corners
+ */
+t_point	is_path_to_curr_cor_safe(t_game *gm, t_point **c_points,
+		int ***v_paths_m, char *pattern_c)
+{
+	t_point	end;
+
+	end = create_sp(c_points[gm->tgt_cr[0]]->r, c_points[gm->tgt_cr[0]]->c, 0);
+	end = is_path_to_tgt_safe(end, gm, v_paths_m, pattern_c);
+	return (end);
+}
+
+t_point	run_hero_run(t_game *gm, int ***v_paths_m;)
+{
+	int		***c_paths_m;
+	t_point	**c_points;
+	char	*pattern_c;
+	t_point	hero;
+
+	pattern_c = "EV1";
+	c_paths_m = collect_corner_paths(4, gm, &c_points, pattern_c); // If NULL
+	hero = create_sp(gm->hero_r, gm->hero_c, 0);
+	sel_new_tgt_obj(c_paths_m, len_paths_m(c_paths_m), hero, &(gm->tgt_cr));
+	hero = is_path_to_curr_cor_safe(gm, c_points, v_paths_m, pattern_c);
+	while (hero.val && !is_null_p(hero))
+	{
+		sel_new_tgt_corn(c_paths_m, len_paths_m(c_paths_m), hero, &(gm->tgt_cr));
+		if (a_is_null(gm->tgt_el, 3))
+			break ; // you are doomed
+		hero = is_path_to_curr_tgt_safe(gm, c_points, v_paths_m, pattern_c);
+	}
+	null_a(gm->tgt_cr, 3);
+	free_paths_matrix(c_paths_m);
+	free_paths_matrix(v_paths_m);
+	free_p(c_points);
+	return (hero);
 }
 
 /**
@@ -933,57 +1128,49 @@ t_point	*is_path_to_curr_tgt_safe(t_game *gm, t_point **c_points,
  * around the hero using sel_new_tgt_obj. Then with find_best_hero_move we
  * select the next best move.
  */
-t_point	*find_hero_move(t_game *gm)
+t_point	find_hero_move(t_game *gm)
 {
-	int		***v_paths;
-	int		***c_paths;
+	int		***v_paths_m;
+	int		***c_paths_m;
 	t_point	**c_points;
 	char	*pattern_c;
-	t_point	*hero;
+	int		dup_tgt[3];
+	t_point	hero;
+	int i;
 
-	v_paths = collect_vill_paths(gm); // If NULL
+	v_paths_m = collect_vill_paths(gm); // If NULL
 	if (gm->colls > 0)
 	{
 		pattern_c = "EV1";
-		c_paths = collect_coll_paths(gm, &c_points, pattern_c); // If NULL
+		c_paths_m = collect_coll_paths(gm, &c_points, pattern_c); // If NULL
 	}
 	else
 	{
 		pattern_c = "V1";
-		c_paths = collect_exit_paths(gm, &c_points, pattern_c); // IF NULL
+		c_paths_m = collect_exit_paths(gm, &c_points, pattern_c); // IF NULL
 	}
-	hero = create_p(gm->hero_r, gm->hero_c, INT_MAX);
-	if (gm->tgt_el->r == -1)
-		gm->tgt_el = sel_new_tgt_obj(c_paths, hero, gm->tgt_el);
-	hero = is_path_to_curr_tgt_safe(gm, c_points, v_paths, pattern_c);
-	while (hero->val)
+	hero = create_sp(gm->hero_r, gm->hero_c, 0);
+	if (a_is_null(gm->tgt_el, 3))
+		sel_new_tgt_obj(c_paths_m, len_paths_m(c_paths_m), hero, &(gm->tgt_el));
+	a_dup(gm->tgt_el, dup_tgt, 3);
+	//hero = is_path_to_curr_tgt_safe(gm, c_points, v_paths_m, pattern_c);
+	i = 0;
+	while (4 > i++)
 	{
-		gm->tgt_el = sel_new_tgt_obj(c_paths, hero, gm->tgt_el);
-		c_frr("", hero);
-		hero = is_path_to_curr_tgt_safe(gm, c_points, v_paths, pattern_c);
+		hero = is_path_to_curr_tgt_safe(gm, c_points, v_paths_m, pattern_c);
+		if(!hero.val && !is_null_p(hero))
+			break;
+		sel_new_tgt_obj(c_paths_m, len_paths_m(c_paths_m), hero, &(gm->tgt_el));
+		a_dup(gm->tgt_el, dup_tgt, 3);
+		if (i == 3)
+		{
+			hero = run_hero_run(gm, v_paths_m);
+			null_a(gm->tgt_el, 3);
+			break ;
+		}
 	}
-	// what the hack is going on here?!!!
-	free_paths_matrix(c_paths);
-	free_paths_matrix(v_paths);
-	// free_p(c_points);
+	free_paths_matrix(c_paths_m);
+	free_paths_matrix(v_paths_m);
+	free_p(c_points);
 	return (hero);
-}
-/**
- * Shifts an array and inserts a new head;
- *
- * @param stack  The stack to be rotated.
- * @param head   The value to insert at the head(0) of the stack
- * @param length The length of the stack.
- */
-void	shift(int *stack, int head, int length)
-{
-	int	i;
-
-	i = length - 1;
-	while (i > 0)
-	{
-		stack[i] = stack[i - 1];
-		i--;
-	}
-	stack[0] = head;
 }

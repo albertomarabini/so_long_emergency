@@ -6,7 +6,7 @@
 /*   By: amarabin <amarabin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 20:15:54 by prossi            #+#    #+#             */
-/*   Updated: 2023/08/06 12:43:00 by amarabin         ###   ########.fr       */
+/*   Updated: 2023/08/08 13:53:49 by amarabin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,8 @@ typedef struct s_game
 	int				hero;
 	int				exit;
 	int				colls;
-	t_point			*tgt_el;
+	int				tgt_el[3];
+	int				tgt_cr[3];
 	int				vills;
 	int				hero_r;
 	int				hero_c;
@@ -92,6 +93,7 @@ void				putstr_fd(const char *s, int fd);
 char				*itoa(int n);
 char				*xyta(int x, int y);
 char				*strdup(const char *s);
+int					trn(int cond, int if_true, int if_false);
 int					read_map(t_game *game, int fd);
 int					init_mlx(t_game *game);
 void				p_img(t_game *game, void *img, int r, int c);
@@ -102,12 +104,17 @@ int					mlx_destroy_hook(void *mlx_ptr, void *win_ptr);
 t_point				*create_p(int r, int c, int val);
 t_point				create_sp(int r, int c, int val);
 t_point				*create_p2(int r, int c, int val, int val2);
-void				sort_p(t_point **arr, int n);
+t_point				create_sp2(int r, int c, int val, int val2);
+t_point				null_p(void);
+void				null_a(int *a, int length);
+int					is_null_p(t_point p);
+t_point				**sort_p(t_point **arr, int n);
+void				rev_p(t_point **arr, int n);
 void				free_p(t_point **arr);
 int					render_next_frame(t_game *game);
 long long			elapsed_time(struct timespec *s);
-t_point				*find_shortest_path(t_point *start, t_point *end,
-						t_game *game/*, int tb*/);
-t_point				*find_hero_move(t_game *gm);
+t_point				find_shortest_path(t_point start, t_point end, t_game *game,
+						int tb);
+t_point				find_hero_move(t_game *gm);
 
 #endif

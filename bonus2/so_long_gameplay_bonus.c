@@ -6,7 +6,7 @@
 /*   By: amarabin <amarabin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/27 17:24:07 by amarabin          #+#    #+#             */
-/*   Updated: 2023/08/06 12:53:02 by amarabin         ###   ########.fr       */
+/*   Updated: 2023/08/08 10:11:04 by amarabin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,8 @@ static int	move_to(int r, int c, t_game *game)
 	{
 		game->colls -= 1;
 		game->map[r][c] = 0;
-		c_frr("", game->tgt_el);
-		game->tgt_el = create_p(-1, -1, -1);;
+		null_a(game->tgt_el, 3);
+		null_a(game->tgt_cr, 3);
 		i = 0;
 		while (game->a_colls[i])
 		{
@@ -106,19 +106,18 @@ int	on_keypress(int key, t_game *game)
 int	render_next_frame(t_game *game)
 {
 	int		vill_c;
-	t_point	*p;
-	t_point	*h;
+	t_point	p;
+	t_point	h;
 	t_point	*v;
 
-	// if (elapsed_time(game->hero_clock) > 500)
-	// {
-	// 	clock_gettime(CLOCK_MONOTONIC, game->hero_clock);
-	// 	p = find_hero_move(game);
-	// 	if(p == NULL)
-	// 		return (0);
-	// 	move_to(p->r, p->c, game);
-	// 	c_frr("", p);
-	// }
+	if (elapsed_time(game->hero_clock) > 500)
+	{
+		clock_gettime(CLOCK_MONOTONIC, game->hero_clock);
+		p = find_hero_move(game);
+		if(is_null_p(p))
+			return (0);
+		move_to(p.r, p.c, game);
+	}
 	if (elapsed_time(game->vill_clock) > 1000)
 	{
 		clock_gettime(CLOCK_MONOTONIC, game->vill_clock);
@@ -126,12 +125,11 @@ int	render_next_frame(t_game *game)
 		while (vill_c < game->vills)
 		{
 			v = game->a_vills[vill_c];
-			h = create_p(game->hero_r, game->hero_c, 0);
-			p = find_shortest_path(v, h, game/*, 1*/);
-			c_frr("", h);
-			if (p == NULL)
+			h = create_sp(game->hero_r, game->hero_c, 0);
+			p = find_shortest_path(*v, h, game, 1);
+			if(p.val == INT_MAX)
 				return (0);
-			if (p->r == game->hero_r && p->c == game->hero_c)
+			if (p.r == game->hero_r && p.c == game->hero_c)
 			{
 				mlx_loop_end(game->mlx);
 				return (out(strdup("You Lose!"), NULL, game));
@@ -143,14 +141,14 @@ int	render_next_frame(t_game *game)
 				p_img(game, game->i.coll, v->r, v->c);
 				game->map[v->r][v->c] = 'C';
 			}
-			c_frr("", v);
-			game->a_vills[vill_c] = p;
-			p->val = 0;
-			if (game->map[p->r][p->c] == 'C')
-				p->val = 1;
-			game->map[p->r][p->c] = 'V';
-			p_img(game, game->i.floor, p->r, p->c);
-			p_img(game, game->i.vill, p->r, p->c);
+			free(game->a_vills[vill_c]);
+			game->a_vills[vill_c] = create_p2(p.r,p.c,p.val,p.val2);
+			game->a_vills[vill_c]->val = 0;
+			if (game->map[p.r][p.c] == 'C')
+				game->a_vills[vill_c]->val = 1;
+			game->map[p.r][p.c] = 'V';
+			p_img(game, game->i.floor, p.r, p.c);
+			p_img(game, game->i.vill, p.r, p.c);
 			vill_c++;
 		}
 	}

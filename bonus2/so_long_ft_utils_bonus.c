@@ -6,7 +6,7 @@
 /*   By: amarabin <amarabin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/27 17:36:11 by amarabin          #+#    #+#             */
-/*   Updated: 2023/08/06 12:33:05 by amarabin         ###   ########.fr       */
+/*   Updated: 2023/08/08 13:53:24 by amarabin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,9 +195,42 @@ t_point	*create_p2(int r, int c, int val, int val2)
 }
 
 /**
- * sorts an array of p ascending
+ * creates a new point with the given row, column and value.
  */
-void	sort_p(t_point **arr, int n)
+t_point	create_sp2(int r, int c, int val, int val2)
+{
+	t_point	point;
+
+	point.r = r;
+	point.c = c;
+	point.val = val;
+	point.val2 = val2;
+	return (point);
+}
+
+t_point null_p(void)
+{
+	t_point	point;
+
+	point.r = INT_MAX;
+	point.c = INT_MAX;
+	point.val = INT_MAX;
+	point.val2 = INT_MAX;
+	return (point);
+}
+
+int is_null_p(t_point p)
+{
+	if (p.r == INT_MAX && p.c == INT_MAX && p.val == INT_MAX && p.val2 == INT_MAX)
+		return (1);
+	return (0);
+}
+
+/**
+ * sorts an array of p ascending. Returns the value to save some space
+ * somewhere else
+ */
+t_point **sort_p(t_point **arr, int n)
 {
 	int		i;
 	int		j;
@@ -228,15 +261,41 @@ void	sort_p(t_point **arr, int n)
 		}
 		i++;
 	}
+	return (arr);
+}
+
+void	rev_p(t_point **arr, int n)
+{
+	int	i;
+	t_point	*temp;
+
+	i = 0;
+	n -= 1;
+	while (i < n)
+	{
+		temp = arr[i];
+		arr[i] = arr[n];
+		arr[n] = temp;
+		i++;
+		n--;
+	}
 }
 
 void	free_p(t_point **arr)
 {
 	int	i;
 
+	if(!arr)
+		return ;
 	i = 0;
 	while (arr[i] != NULL)
 		c_frr("", arr[i++]);
 	c_frr("", arr);
 }
 
+int	trn(int cond, int if_true, int if_false)
+{
+	if (cond)
+		return (if_true);
+	return (if_false);
+}
