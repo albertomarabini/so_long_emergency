@@ -6,7 +6,7 @@
 /*   By: amarabin <amarabin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/27 17:24:07 by amarabin          #+#    #+#             */
-/*   Updated: 2023/08/11 13:46:47 by amarabin         ###   ########.fr       */
+/*   Updated: 2023/08/08 13:53:11 by amarabin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ static int	vld_line(t_game *game, int r, int c)
 	else if (game->map[r][c] == 'C')
 		game->colls++;
 	else if (game->map[r][c] == 'E')
-		game->exits++;
+		game->exit++;
 	else if (game->map[r][c] == 'V')
 		game->vills++;
 	if ((c == 0 || c == game->map_w - 1) && game->map[r][c] != '1')
@@ -139,11 +139,11 @@ static int	validate_map(t_game *game)
 		}
 		r++;
 	}
-	if (!game->exits || !game->colls || !game->hero || !game->vills)
+	if (!game->exit || !game->colls || !game->hero || !game->vills)
 		return (err(strdup("No exit, hero, villain or collectible\n"), NULL));
 	game->a_vills = (t_point **)c_alloc(sizeof(t_point *) * (game->vills + 1));
 	game->a_colls = (t_point **)c_alloc(sizeof(t_point *) * (game->colls + 1));
-	game->a_exits = (t_point **)c_alloc(sizeof(t_point *) * (game->exits + 1));
+	game->a_exits = (t_point **)c_alloc(sizeof(t_point *) * (game->exit + 1));
 	vill_c = 0;
 	coll_c = 0;
 	exit_c = 0;

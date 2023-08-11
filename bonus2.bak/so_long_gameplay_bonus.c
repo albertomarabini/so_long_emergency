@@ -6,7 +6,7 @@
 /*   By: amarabin <amarabin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/27 17:24:07 by amarabin          #+#    #+#             */
-/*   Updated: 2023/08/09 00:35:27 by amarabin         ###   ########.fr       */
+/*   Updated: 2023/08/08 10:11:04 by amarabin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,9 +38,8 @@ static int	move_to(int r, int c, t_game *game)
 	}
 	if (game->map[r][c] == 'C')
 	{
-		printf("KEY %i FOUND\n", game->colls);
 		game->colls -= 1;
-		game->map[r][c] = '0';
+		game->map[r][c] = 0;
 		null_a(game->tgt_el, 3);
 		null_a(game->tgt_cr, 3);
 		i = 0;
@@ -111,7 +110,7 @@ int	render_next_frame(t_game *game)
 	t_point	h;
 	t_point	*v;
 
-	if (elapsed_time(game->hero_clock) > HERO_TICK)
+	if (elapsed_time(game->hero_clock) > 500)
 	{
 		clock_gettime(CLOCK_MONOTONIC, game->hero_clock);
 		p = find_hero_move(game);
@@ -119,7 +118,7 @@ int	render_next_frame(t_game *game)
 			return (0);
 		move_to(p.r, p.c, game);
 	}
-	if (elapsed_time(game->vill_clock) > VILL_TICK)
+	if (elapsed_time(game->vill_clock) > 1000)
 	{
 		clock_gettime(CLOCK_MONOTONIC, game->vill_clock);
 		vill_c = 0;
