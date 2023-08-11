@@ -6,57 +6,11 @@
 /*   By: amarabin <amarabin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/26 08:17:55 by amarabin          #+#    #+#             */
-/*   Updated: 2023/08/11 13:52:59 by amarabin         ###   ########.fr       */
+/*   Updated: 2023/08/11 19:01:36 by amarabin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long_bonus.h"
-
-char **duplicate_map(t_game *gm) {
-	int i;
-    char **new_map = (char **)malloc((gm->map_h + 1) * sizeof(char *));
-	if (new_map == NULL) {
-		// Handle memory allocation failure
-    }
-	new_map[gm->map_h] = NULL;
-	i = 0;
-    while(i < gm->map_h) {
-        new_map[i] = strdup(gm->map[i]);
-        if (new_map[i] == NULL) {
-            // Handle memory allocation failure
-        }
-    }
-    return new_map;
-}
-
-void fill_map_unsafe_spots(char **map, int r, int c, int ray) {
-    if (map[r][c] == '1' || ray == 0)
-        return;
-
-    map[r][c] = '1';
-
-    fill_map_unsafe_spots(map, r-1, c, ray-1);
-    fill_map_unsafe_spots(map, r+1, c, ray-1);
-    fill_map_unsafe_spots(map, r, c-1, ray-1);
-    fill_map_unsafe_spots(map, r, c+1, ray-1);
-}
-
-
-void char create_safe_map(t_game *gm, int ray) {
-	int r;
-	int c;
-
-	r=0;
-	game->safe_map = duplicate_map(gm);
-    while(r < gm->map_h) {
-		c = 0;
-        while(c < gm->map_w) {
-			if(gm->safe_map[r][c] == 'V')
-				fill_map_unsafe_spot(gm->safe_map, r, c, ray);
-			c++;
-		}
-    }
-}
 
 static void	free_image(void *mlx, void *img)
 {
@@ -81,12 +35,12 @@ static void	free_images(t_game *game)
 	free_image(game->mlx, game->i.floor);
 }
 
-void	free_map(char **map)
+void	free_map(char **map, int size)
 {
 	int	i;
 
 	i = 0;
-	while (i < game->map_h)
+	while (i < size)
 	{
 		if (map[i])
 			c_frr("", map[i]);
@@ -97,7 +51,7 @@ void	free_map(char **map)
 static void	free_game(t_game *game)
 {
 	if (game->map != NULL)
-		free_map(game->map);
+		free_map(game->map, game->map_h);
 	free_images(game);
 	free_p(game->a_corners);
 	free_p(game->a_vills);
@@ -147,7 +101,6 @@ static t_game	*init_game(char *file)
 		free_game(game);
 		return (NULL);
 	}
-	create_safe_map(game, 2);
 	close(fd);
 	return (game);
 }

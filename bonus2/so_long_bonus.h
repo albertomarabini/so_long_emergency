@@ -6,7 +6,7 @@
 /*   By: amarabin <amarabin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 20:15:54 by prossi            #+#    #+#             */
-/*   Updated: 2023/08/11 13:53:37 by amarabin         ###   ########.fr       */
+/*   Updated: 2023/08/11 19:00:44 by amarabin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,6 @@ typedef struct s_assets
 typedef struct s_game
 {
 	char			**map;
-	char			**safe_map;
 	int				map_h;
 	int				map_w;
 	int				hero;
@@ -122,7 +121,6 @@ long long			elapsed_time(struct timespec *s);
 t_point				find_shortest_path(t_point start, t_point end, t_game *game,
 						int tb);
 t_point				find_hero_move(t_game *gm);
-void				free_map(char **map);
-void char			create_safe_map(t_game *gm, int ray);
+void				free_map(char **map, int size);
 
 #endif

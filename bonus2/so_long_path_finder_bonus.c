@@ -6,7 +6,7 @@
 /*   By: amarabin <amarabin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 10:47:19 by amarabin          #+#    #+#             */
-/*   Updated: 2023/08/11 14:30:28 by amarabin         ###   ########.fr       */
+/*   Updated: 2023/08/11 19:23:32 by amarabin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -514,7 +514,64 @@ int	***concat_paths(int ***p1, int ***p2)
 	return (pc);
 }
 
+char **duplicate_map(t_game *gm) {
+	int i;
+    char **new_map = (char **)malloc((gm->map_h + 1) * sizeof(char *));
+	if (new_map == NULL) {
+		// Handle memory allocation failure
+    }
+	new_map[gm->map_h] = NULL;
+	i = 0;
+    while(i < gm->map_h) {
+        new_map[i] = strdup(gm->map[i]);
+        if (new_map[i] == NULL) {
+            // Handle memory allocation failure
+        }
+		i++;
+    }
+    return new_map;
+}
 
+void fill_map_unsafe_spots(char **map, int r, int c, int ray) {
+    if (map[r][c] == '1' || ray == 0)
+        return;
+    map[r][c] = '1';
+
+    fill_map_unsafe_spots(map, r-1, c, ray-1);
+    fill_map_unsafe_spots(map, r+1, c, ray-1);
+    fill_map_unsafe_spots(map, r, c-1, ray-1);
+    fill_map_unsafe_spots(map, r, c+1, ray-1);
+}
+
+t_game *create_safe_map(t_game *gm, int ray)
+{
+	t_game *safe;
+	int r;
+	int c;
+
+	safe = (t_game *)c_alloc(sizeof(t_game));
+	if (!safe)
+		return (NULL);
+	safe->map = duplicate_map(gm);
+	r = 0;
+    while(r < gm->map_h) {
+		c = 0;
+        while(c < gm->map_w) {
+			if(safe->map[r][c] == 'V')
+				fill_map_unsafe_spots(safe->map, r, c, ray);
+			c++;
+		}
+		r++;
+    }
+	safe->map_h = gm->map_h;
+	safe->map_w = gm->map_w;
+	safe->hero_c = gm->hero_c;
+	safe->hero_r = gm->hero_r;
+	safe->a_corners = gm->a_corners;
+	safe->a_vills = gm->a_vills;
+	null_a(safe->tgt_cr, 3);
+	return (safe);
+}
 
 
 /**
@@ -1028,11 +1085,15 @@ static t_point	**pot_tgt_moves(int ***pts, int len_pts, t_point p)
  * selected will be held in the r value of the point.
  * If none is found it will try to reset the search.
  */
-void	sel_new_tgt_obj(int ***pts, int len_pts, t_point p, int (*curr)[3])
+void	sel_new_tgt_obj(int ***pts, t_point p, int (*curr)[3])
 {
 	t_point	**movs;
 	int		i;
+	int len_pts;
 
+	len_pts = 0;
+	while (pts[len_pts] != NULL)
+		len_pts++;
 	i = 4 * len_pts;
 	movs = pot_tgt_moves(pts, len_pts, p);
 	sort_p(movs, i);
@@ -1053,15 +1114,19 @@ void	sel_new_tgt_obj(int ***pts, int len_pts, t_point p, int (*curr)[3])
  * Does the same thing as sel_new_tgt_obj but tailored for corners
  * (we need to find the farthest reacheable, not the closest)
  */
-void	sel_new_tgt_corn(int ***pts, int len_pts, t_point p, int (*curr)[3])
+void	sel_new_tgt_corn(int ***pts, t_point p, int (*curr)[3])
 {
 	t_point	**movs;
 	int		i;
+	int len_pts;
 
+	len_pts = 0;
+	while (pts[len_pts] != NULL)
+		len_pts++;
 	i = 4 * len_pts;
 	movs = pot_tgt_moves(pts, len_pts, p);
-	//rev_p(sort_p(movs, i), i);
-	sort_p(movs, i);
+	rev_p(sort_p(movs, i), i);
+	//sort_p(movs, i);
 	i = 0;
 	while (movs[i] != NULL)
 	{
@@ -1122,7 +1187,7 @@ static t_point	is_path_to_tgt_nsafe(t_point t, t_game *gm, int ***v_paths_m, cha
 	while (trn(gm->vills > 4, 4, gm->vills) > i)
 	//while(i<2)
 	{
-		sel_new_tgt_obj(v_paths_m, len_paths_m(v_paths_m), t, &tgt_v);
+		sel_new_tgt_obj(v_paths_m, t, &tgt_v);
 		nxt.val = will_it_crash(strt, *(gm->a_vills[tgt_v[0]]), t, gm);
 		printf(" vill :%i (%i,%i) crash: %i ", i, gm->a_vills[tgt_v[0]]->r, gm->a_vills[tgt_v[0]]->c,  nxt.val);
 		print_array(tgt_v, 3);
@@ -1238,25 +1303,6 @@ t_point	is_path_to_curr_cor_nsafe(t_game *gm, t_point **c_points,
 // }
 
 
-t_point	find_safest_path(t_game *game)
-{
-
-	t_game game_copy;
-
-	game_copy.map = duplicate_map(game);
-	game_copy.map_h = game->map_h;
-	game_copy.map_w = game->map_w;
-	fill_safe_map(game_copy.map, end.r, end.c, tb);
-
-	path = init_paths_matrix(game);
-	if (!path)
-		return (null_p());
-	pr = create_pp(create_sp(start.r, start.c, 0), end);
-	lay_paths(pr, path, game, "E1");
-	nxt = trak_back_paths(end, path, game, tb);
-	free_paths(path);
-	return (nxt);
-}
 
 
 t_point	run_hero_run(t_game *gm, int ***v_paths_m)
@@ -1264,31 +1310,32 @@ t_point	run_hero_run(t_game *gm, int ***v_paths_m)
 	int		***c_paths_m;
 	t_point	**c_points;
 	char	*pattern_c;
+	t_game *safe_game;
 	t_point	hero;
 	t_point	run;
 	int i;
 
-    free_map(gm->safe_map);
-    create_safe_map(gm, 2);
 	pattern_c = "EV1";
-	c_paths_m = collect_corner_paths(4, gm, &c_points, pattern_c); // If NULL
+	safe_game = create_safe_map(gm, 2);
+	c_paths_m = collect_corner_paths(4, safe_game, &c_points, pattern_c); // If NULL
 	hero = create_sp(gm->hero_r, gm->hero_c, 0);
 	i = 0;
 	gm->run_unsafe = 1;
-	while (5 > i++)
+	while (5 > i++) //4+1
 	{
-		sel_new_tgt_corn(c_paths_m, len_paths_m(c_paths_m), hero, &(gm->tgt_cr));
-		if(within(hero. r, c_points[gm->tgt_cr[0]]->r, 2) && within(hero.c, c_points[gm->tgt_cr[0]]->c,2))
+		sel_new_tgt_corn(c_paths_m, hero, &(safe_game->tgt_cr));
+		if(within(hero. r, c_points[safe_game->tgt_cr[0]]->r, 2) && within(hero.c, c_points[safe_game->tgt_cr[0]]->c,2))
 			continue ;
-		hero = is_path_to_curr_cor_nsafe(gm, c_points, v_paths_m, pattern_c);
-		printf("hero run fnd corner %i(%i,%i) crash:%i ", i - 1, c_points[gm->tgt_cr[0]]->r, c_points[gm->tgt_cr[0]]->c, hero.val);
-		print_array(gm->tgt_cr, 3);
+		hero = is_path_to_curr_cor_nsafe(safe_game, c_points, v_paths_m, pattern_c);
+		printf("hero run fnd corner %i(%i,%i) crash:%i ", i - 1, c_points[safe_game->tgt_cr[0]]->r, c_points[safe_game->tgt_cr[0]]->c, hero.val);
+		printf("%s",mtostr(c_paths_m[safe_game->tgt_cr[0]], gm->map_h, gm->map_w));
+		print_array(safe_game->tgt_cr, 3);
 		if(!is_null_p(hero) && !hero.val) {
 			gm->run_unsafe = 0;
 			break;
 		}
 	}
-	gm->run_to = *(c_points[gm->tgt_cr[0]]);
+	gm->run_to = *(c_points[safe_game->tgt_cr[0]]);
 	run = find_distance(hero, gm->run_to, gm);
 	gm->run = trn(run.r > run.c,run.r,run.c) + 1;
 	null_a(gm->tgt_cr, 3);
@@ -1317,6 +1364,7 @@ t_point	find_hero_move(t_game *gm)
 	int		***v_paths_m;
 	int		***c_paths_m;
 	t_point	**c_points;
+	t_game *safe_game;
 	char	*pattern_c;
 	t_point	hero;
 	int targets;
@@ -1336,7 +1384,8 @@ t_point	find_hero_move(t_game *gm)
 		{
 			gm->run--;
 			free_paths_matrix(v_paths_m);
-			return (find_shortest_path(hero, gm->run_to, gm, 1));
+			safe_game = create_safe_map(gm, 2);
+			return (find_shortest_path(hero, gm->run_to, safe_game, 1));
 		}
 	}
 	if (gm->colls > 0)
@@ -1356,7 +1405,7 @@ t_point	find_hero_move(t_game *gm)
 	//while (targets > i)
 	{
 		if (a_is_null(gm->tgt_el, 3))
-			sel_new_tgt_obj(c_paths_m, len_paths_m(c_paths_m), hero, &(gm->tgt_el));
+			sel_new_tgt_obj(c_paths_m, hero, &(gm->tgt_el));
 		printf("target:%i of %i (%i,%i)", i, targets, c_points[gm->tgt_el[0]]->r, c_points[gm->tgt_el[0]]->c);
 		print_array(gm->tgt_el, 3);
 		hero = is_path_to_curr_tgt_nsafe(gm, c_points, v_paths_m, pattern_c);
