@@ -6,7 +6,7 @@
 /*   By: amarabin <amarabin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/27 17:36:11 by amarabin          #+#    #+#             */
-/*   Updated: 2023/08/08 13:53:24 by amarabin         ###   ########.fr       */
+/*   Updated: 2023/08/12 00:30:32 by amarabin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,11 @@ void c_frr(char *reason, void *ptr)
 {
 	//printf("memory deallocated for %s\n", reason);
 	free(ptr);
+}
+
+char *c_strerror(void)
+{
+	return (strdup(strerror(errno)));
 }
 
 char	*strdup(const char *s)

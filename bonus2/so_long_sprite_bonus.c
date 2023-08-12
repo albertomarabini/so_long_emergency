@@ -6,7 +6,7 @@
 /*   By: amarabin <amarabin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 02:45:23 by amarabin          #+#    #+#             */
-/*   Updated: 2023/08/06 11:25:36 by amarabin         ###   ########.fr       */
+/*   Updated: 2023/08/12 00:29:41 by amarabin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ t_sprite	*init_sprite(int len, int start)
 	sprite = (t_sprite *)c_alloc(sizeof(t_sprite));
 	if (sprite == NULL)
 	{
-		err(strdup("Unable to instantiate sprite\n"), strerror(errno));
+		err(strdup("Unable to instantiate sprite\n"), c_strerror());
 		return (NULL);
 	}
 	sprite->len = len;

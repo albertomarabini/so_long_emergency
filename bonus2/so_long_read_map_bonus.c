@@ -6,7 +6,7 @@
 /*   By: amarabin <amarabin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/27 17:24:07 by amarabin          #+#    #+#             */
-/*   Updated: 2023/08/11 13:46:47 by amarabin         ###   ########.fr       */
+/*   Updated: 2023/08/12 00:29:41 by amarabin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,6 +166,7 @@ static int	validate_map(t_game *game)
 	game->a_vills[vill_c] = NULL;
 	game->a_colls[coll_c] = NULL;
 	game->a_exits[exit_c] = NULL;
+	game->o_map = duplicate_map(game);
 	game->a_corners = find_corners(game);
 	return (0);
 }
@@ -184,7 +185,7 @@ static int	init_game_map(t_game *game, char *last_line)
 
 	game->map = (char **)c_alloc(sizeof(char *) * (game->map_h + 1));
 	if (!game->map)
-		return (err(strdup("Unable to instantiate map\n"), strerror(errno)));
+		return (err(strdup("Unable to instantiate map\n"), c_strerror()));
 	i = 0;
 	while (i <= game->map_h)
 	{
@@ -218,7 +219,7 @@ int	read_map(t_game *game, int fd)
 
 	res = get_next_line(fd, &line);
 	if (res == -1)
-		return (err(strdup("Error while reading map: "), strerror(errno)));
+		return (err(strdup("Error while reading map: "), c_strerror()));
 	game->map_h++;
 	if (game->map_w < 0)
 		game->map_w = (int)strlen(line);

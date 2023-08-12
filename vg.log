@@ -1,25 +1,25 @@
-==15281== Memcheck, a memory error detector
-==15281== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
-==15281== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
-==15281== Command: ../debugger/a.out ./maps/piscine_bonus.ber
-==15281== Parent PID: 15280
-==15281== 
-==15281== 
-==15281== HEAP SUMMARY:
-==15281==     in use at exit: 448 bytes in 4 blocks
-==15281==   total heap usage: 114,057 allocs, 114,053 frees, 2,994,632 bytes allocated
-==15281== 
-==15281== LEAK SUMMARY:
-==15281==    definitely lost: 0 bytes in 0 blocks
-==15281==    indirectly lost: 0 bytes in 0 blocks
-==15281==      possibly lost: 0 bytes in 0 blocks
-==15281==    still reachable: 0 bytes in 0 blocks
-==15281==         suppressed: 448 bytes in 4 blocks
-==15281== 
-==15281== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 729 from 3)
---15281-- 
---15281-- used_suppression:      2 mlx_int_new_xshm_image suppressions.supp:18 suppressed: 448 bytes in 2 blocks
---15281-- used_suppression:      2 XShmCreateImage suppressions.supp:2 suppressed: 272 bytes in 2 blocks
---15281-- used_suppression:    727 X on SUSE11 writev uninit padding /usr/libexec/valgrind/default.supp:377
-==15281== 
-==15281== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 729 from 3)
+==16699== Memcheck, a memory error detector
+==16699== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==16699== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==16699== Command: ../debugger/a.out ./maps/laby3_bonus.ber
+==16699== Parent PID: 16698
+==16699== 
+==16699== 
+==16699== HEAP SUMMARY:
+==16699==     in use at exit: 448 bytes in 4 blocks
+==16699==   total heap usage: 75,307 allocs, 75,303 frees, 7,110,149 bytes allocated
+==16699== 
+==16699== LEAK SUMMARY:
+==16699==    definitely lost: 0 bytes in 0 blocks
+==16699==    indirectly lost: 0 bytes in 0 blocks
+==16699==      possibly lost: 0 bytes in 0 blocks
+==16699==    still reachable: 0 bytes in 0 blocks
+==16699==         suppressed: 448 bytes in 4 blocks
+==16699== 
+==16699== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 890 from 3)
+--16699-- 
+--16699-- used_suppression:      2 mlx_int_new_xshm_image suppressions.supp:18 suppressed: 448 bytes in 2 blocks
+--16699-- used_suppression:      2 XShmCreateImage suppressions.supp:2 suppressed: 272 bytes in 2 blocks
+--16699-- used_suppression:    888 X on SUSE11 writev uninit padding /usr/libexec/valgrind/default.supp:377
+==16699== 
+==16699== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 890 from 3)

@@ -6,7 +6,7 @@
 /*   By: amarabin <amarabin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 20:15:54 by prossi            #+#    #+#             */
-/*   Updated: 2023/08/11 19:00:44 by amarabin         ###   ########.fr       */
+/*   Updated: 2023/08/12 08:45:41 by amarabin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,8 @@
 
 # define ASSET_SIZE 48
 # define DEBUGGER_H 48
-# define HERO_TICK 300
-# define VILL_TICK 1000
+# define HERO_TICK 60
+# define VILL_TICK 120
 
 typedef struct s_point
 {
@@ -67,13 +67,14 @@ typedef struct s_assets
 typedef struct s_game
 {
 	char			**map;
+	char			**o_map;
 	int				map_h;
 	int				map_w;
 	int				hero;
 	int				exits;
 	int				colls;
 	int				tgt_el[3];
-	int				tgt_cr[3];
+	//int				tgt_cr[3];
 	int				vills;
 	int				hero_r;
 	int				hero_c;
@@ -94,6 +95,7 @@ typedef struct s_game
 
 void				*c_alloc(size_t size);
 void				c_frr(char *reason, void *ptr);
+char				*c_strerror(void);
 void				putstr_fd(const char *s, int fd);
 char				*itoa(int n);
 char				*xyta(int x, int y);
@@ -122,5 +124,6 @@ t_point				find_shortest_path(t_point start, t_point end, t_game *game,
 						int tb);
 t_point				find_hero_move(t_game *gm);
 void				free_map(char **map, int size);
+char				**duplicate_map(t_game *gm);
 
 #endif

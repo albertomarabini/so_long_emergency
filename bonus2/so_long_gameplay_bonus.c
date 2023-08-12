@@ -6,7 +6,7 @@
 /*   By: amarabin <amarabin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/27 17:24:07 by amarabin          #+#    #+#             */
-/*   Updated: 2023/08/09 00:35:27 by amarabin         ###   ########.fr       */
+/*   Updated: 2023/08/12 05:17:09 by amarabin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,9 @@ static int	move_to(int r, int c, t_game *game)
 		printf("KEY %i FOUND\n", game->colls);
 		game->colls -= 1;
 		game->map[r][c] = '0';
+		game->o_map[r][c] = '0';
 		null_a(game->tgt_el, 3);
-		null_a(game->tgt_cr, 3);
+		//null_a(game->tgt_cr, 3);
 		i = 0;
 		while (game->a_colls[i])
 		{
@@ -137,7 +138,7 @@ int	render_next_frame(t_game *game)
 			}
 			p_img(game, game->i.floor, v->r, v->c);
 			game->map[v->r][v->c] = '0';
-			if (v->val)
+			if (game->o_map[v->r][v->c] == 'C')
 			{
 				p_img(game, game->i.coll, v->r, v->c);
 				game->map[v->r][v->c] = 'C';
@@ -145,8 +146,6 @@ int	render_next_frame(t_game *game)
 			free(game->a_vills[vill_c]);
 			game->a_vills[vill_c] = create_p2(p.r,p.c,p.val,p.val2);
 			game->a_vills[vill_c]->val = 0;
-			if (game->map[p.r][p.c] == 'C')
-				game->a_vills[vill_c]->val = 1;
 			game->map[p.r][p.c] = 'V';
 			p_img(game, game->i.floor, p.r, p.c);
 			p_img(game, game->i.vill, p.r, p.c);

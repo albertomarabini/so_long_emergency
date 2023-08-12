@@ -6,7 +6,7 @@
 /*   By: amarabin <amarabin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/27 17:24:07 by amarabin          #+#    #+#             */
-/*   Updated: 2023/08/06 12:03:42 by amarabin         ###   ########.fr       */
+/*   Updated: 2023/08/12 00:29:41 by amarabin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static void	*l_img(void *mlx, char *path, int s)
 	img = mlx_xpm_file_to_image(mlx, path, &w, &h);
 	if (!img)
 	{
-		err(strdup("Unable to load image "), strerror(errno));
+		err(strdup("Unable to load image "), c_strerror());
 		return (NULL);
 	}
 	return (img);
@@ -112,7 +112,7 @@ int	init_mlx(t_game *game)
 
 	game->mlx = mlx_init();
 	if (!game->mlx)
-		return (err(strdup("Can't instantiate mlx: "), strerror(errno)));
+		return (err(strdup("Can't instantiate mlx: "), c_strerror()));
 	mlx_get_screen_size(game->mlx, &w, &h);
 	if (game->map_h * ASSET_SIZE + DEBUGGER_H > h || game->map_w
 		* ASSET_SIZE > w)
@@ -121,7 +121,7 @@ int	init_mlx(t_game *game)
 	h = game->map_h * ASSET_SIZE + DEBUGGER_H;
 	game->win = mlx_new_window(game->mlx, w, h, "sl");
 	if (!game->win)
-		return (err(strdup("Can't instantiate mlx win: "), strerror(errno)));
+		return (err(strdup("Can't instantiate mlx win: "), c_strerror()));
 	if (load_images(game) == -1)
 		return (err(strdup("Can't load images\n"), NULL));
 	render_map(game);

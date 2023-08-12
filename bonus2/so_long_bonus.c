@@ -6,7 +6,7 @@
 /*   By: amarabin <amarabin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/26 08:17:55 by amarabin          #+#    #+#             */
-/*   Updated: 2023/08/11 19:01:36 by amarabin         ###   ########.fr       */
+/*   Updated: 2023/08/12 05:16:55 by amarabin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,13 @@ void	free_map(char **map, int size)
 static void	free_game(t_game *game)
 {
 	if (game->map != NULL)
+	{
 		free_map(game->map, game->map_h);
+	}
+	if (game->o_map != NULL)
+	{
+		free_map(game->o_map, game->map_h);
+	}
 	free_images(game);
 	free_p(game->a_corners);
 	free_p(game->a_vills);
@@ -78,9 +84,10 @@ static t_game	*init_game(char *file)
 
 	fd = open(file, O_RDONLY);
 	if (fd < 0)
-		err(strdup("Unable to open file: "), strerror(errno));
+		err(strdup("Unable to open file: "), c_strerror());
 	game = (t_game *)c_alloc(sizeof(t_game));
 	game->map = NULL;
+	game->o_map = NULL;
 	game->map_h = 0;
 	game->map_w = -1;
 	game->hero = 0;
@@ -93,7 +100,7 @@ static t_game	*init_game(char *file)
 	game->run = 0;
 	game->run_unsafe = 0;
 	null_a(game->tgt_el, 3);
-	null_a(game->tgt_cr, 3);
+	//null_a(game->tgt_cr, 3);
 	game->hero_clock = c_alloc(sizeof(struct timespec));
 	game->vill_clock = c_alloc(sizeof(struct timespec));
 	if (fd < 0 || read_map(game, fd) == -1 || init_mlx(game) == -1)
