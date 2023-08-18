@@ -6,7 +6,7 @@
 /*   By: amarabin <amarabin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 02:45:23 by amarabin          #+#    #+#             */
-/*   Updated: 2023/07/29 05:41:06 by amarabin         ###   ########.fr       */
+/*   Updated: 2023/08/17 07:45:26 by amarabin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,79 +20,92 @@
  * extension such as ".xpm"
  * Shoud be called after the sprite structure has been initialized.
  */
-int	load_sprite_assets(t_sprite *sprite, void *mlx, char *path, char *extension)
+static int	load_sprite_assets(t_stp *sprite, void *mlx)
 {
-	char	*filepath;
-	char	*str;
-	void	*image;
+	char	*name;
+	char	*tmp;
 	int		i;
 
 	i = 0;
-	while (i <= sprite->len)
+	sprite->frames[0] = NULL;
+	while (i < sprite->len)
 	{
-		str = ft_strjoin(itoa(i), extension);
-		filepath = ft_strjoin(path, str);
-		free(str);
-		sprite->frames[i] = l_img(mlx, filepath, ASSET_SIZE);
+		tmp = itoa(i);
+		name = ft_strjoin(tmp, sprite->ext);
+		free(tmp);
+		sprite->frames[i + 1] = NULL;
+		sprite->frames[i] = l_img(mlx, sprite->path, name, ASSET_SIZE);
 		if (sprite->frames[i] == NULL)
 		{
-			err(strdup("Unable to load sprite: "), perror(filepath));
-			free(filepath);
-			return (-1);
+			free(name);
+			return (err(strdup("Unable to load sprite: "), c_strerror()));
 		}
+		free(name);
 		i++;
 	}
-	return (0);
+	return (1);
 }
 
 /**
  * Initializes a sprite structure with the specified length and start frame.
  */
-t_sprite	*init_sprite(int len, int start)
+t_stp	*init_sprite(t_game *game, t_point start_len, char *path, char *ext)
 {
-	t_sprite	*sprite;
-	int			i;
+	t_stp	*sprite;
 
-	sprite = (t_sprite *)malloc(sizeof(t_sprite));
-	if (sprite == NULL)
+	sprite = (t_stp *)c_alloc(game, sizeof(t_stp));
+	sprite->len = start_len.c;
+	sprite->stop = 0;
+	sprite->current_frame = start_len.r;
+	sprite->path = path;
+	sprite->ext = ext;
+	sprite->frames = (void **)c_alloc(game, (sprite->len + 1) * sizeof(void *));
+	if (!sprite->frames || load_sprite_assets(sprite, game->mlx) == -1)
 	{
-		err(strdup("Unable to instantiate sprite\n"), strerror(errno));
+		free_sprite(game, sprite);
 		return (NULL);
 	}
-	sprite->len = len;
-	sprite->stop = 1;
-	sprite->current_frame = start;
-	sprite->frames = (void **)malloc((len + 1) * sizeof(void *));
-	i = 0;
-	while (i <= len)
-		sprite->frames[i++] = NULL;
-	sprite->frames[i] = NULL;
 	return (sprite);
 }
 
-void	free_sprite(t_sprite *sprite)
+void	free_sprite(t_game *gm, t_stp *sprite)
 {
+	int	i;
+
+	i = 0;
 	if (sprite != NULL)
 	{
 		i = 0;
-		while (i < sprite->len)
+		while (sprite->len > i++)
 		{
-			if (sprite->frames[i] != NULL)
-				free(sprite->frames[i++]);
+			if (sprite->frames[i - 1] != NULL)
+				free_image(gm->mlx, sprite->frames[i - 1]);
 		}
 		free(sprite->frames);
+		free(sprite->path);
+		free(sprite->ext);
 		free(sprite);
 	}
 }
 
+void	free_sprite_a(t_game *gm, t_stp **sprites)
+{
+	int	i;
+
+	i = 0;
+	while (sprites[i] != NULL)
+		free_sprite(gm, sprites[i++]);
+	free(sprites);
+}
+
 /**
- * Retrieves the current frame from the sprite structure.
+ * Retrieves the current frame of the sprite.
  * If the 'stop' field of the sprite is 0, the function also increments
  * the current frame position.when it reaches the length of
  * the sprites, the current frame is reset to 0.
  *
  */
-void	*get_sprite_frame(t_sprite *sprite)
+void	*get_sprite_frame(t_stp *sprite)
 {
 	void	*frame;
 

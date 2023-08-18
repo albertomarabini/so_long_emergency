@@ -6,7 +6,7 @@
 /*   By: amarabin <amarabin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/27 17:24:07 by amarabin          #+#    #+#             */
-/*   Updated: 2023/08/02 07:42:22 by amarabin         ###   ########.fr       */
+/*   Updated: 2023/08/15 08:03:59 by amarabin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static int	val_line(t_game *game, int r, int c)
 		game->hero++;
 		game->hero_r = r;
 		game->hero_c = c;
-		game->map[r][c] = '0';
+		game->map[r][c] = 'P';
 	}
 	else if (game->map[r][c] == 'C')
 		game->colls++;
@@ -67,20 +67,15 @@ static int	validate_map(t_game *game)
 	int	r;
 	int	c;
 
-	mlx_get_screen_size(game->mlx, &r, &c);
-	if (game->map_h * ASSET_SIZE > r || game->map_w * ASSET_SIZE > c)
-		return (err(strdup("Map too big for screen\n"), NULL));
-	if (game->map_h < 3 || game->map_w < 3)
-		return (err(strdup("Unplayable Map\n"), NULL));
 	r = 0;
 	while (r < game->map_h)
 	{
 		c = 0;
 		while (c < game->map_w)
 		{
-			if ((r > 0 || r < game->map_h - 1) && val_line(game, r, c) == -1)
+			if ((r > 0 && r < game->map_h - 1) && val_line(game, r, c) == -1)
 				return (-1);
-			else if (game->map[r][c] != '1')
+			if ((r == 0 || r == game->map_h - 1) && game->map[r][c] != '1')
 				return (err(strdup("Invalid symbol at "), xyta(r, c)));
 			c++;
 		}

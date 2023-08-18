@@ -1,1 +1,0 @@
-gcc -g -o ../debugger/a.out get_next_line/get_next_line.c get_next_line/get_next_line_utils.c bonus2.bak/so_long_bonus.c bonus2.bak/so_long_utils_bonus.c bonus2.bak/so_long_read_map_bonus.c bonus2.bak/so_long_init_mlx_bonus.c bonus2.bak/so_long_gameplay_bonus.c bonus2.bak/so_long_ft_utils_bonus.c bonus2.bak/so_long_path_finder_bonus.c -I./ -lmlx -lXext -lX11

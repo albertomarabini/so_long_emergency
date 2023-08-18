@@ -6,7 +6,7 @@
 /*   By: amarabin <amarabin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 20:15:54 by prossi            #+#    #+#             */
-/*   Updated: 2023/07/30 17:32:41 by amarabin         ###   ########.fr       */
+/*   Updated: 2023/08/15 19:01:08 by amarabin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 # include <stdlib.h>
 # include <unistd.h>
 
-# define ASSET_SIZE 48
+# define ASSET_SIZE 32
 
 typedef struct s_assets
 {
