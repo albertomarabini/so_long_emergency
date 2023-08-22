@@ -6,7 +6,7 @@
 /*   By: amarabin <amarabin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 02:24:58 by amarabin          #+#    #+#             */
-/*   Updated: 2023/08/17 20:27:22 by amarabin         ###   ########.fr       */
+/*   Updated: 2023/08/22 17:03:19 by amarabin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,11 +149,11 @@ int	will_it_crash(t_point a, t_point b, t_point t, t_game *gm)
 	if (at.val < bt.val && at.val2 == ba.val2)
 		return (0);
 	else if (ba.val > bt.val && ba.val > at.val && ba.val2 == bt.val2
-		&& bt.val < (at.val / (1 + (VILL_TICK / HERO_TICK))))
+		&& bt.val < (at.val / ((VILL_TICK / HERO_TICK))))
 		return (1);
 	else if (ba.val < at.val && ba.val2 == (at.val2 + 2) % 4)
 		return (1);
-	else if (ba.val < at.val || bt.val < at.val / ( 1+  (VILL_TICK / HERO_TICK)))
+	else if (ba.val < at.val || bt.val < at.val / ((VILL_TICK / HERO_TICK)))
 		return (1);
 	return (0);
 }

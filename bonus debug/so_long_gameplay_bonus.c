@@ -6,7 +6,7 @@
 /*   By: amarabin <amarabin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/27 17:24:07 by amarabin          #+#    #+#             */
-/*   Updated: 2023/08/17 11:56:21 by amarabin         ###   ########.fr       */
+/*   Updated: 2023/08/20 19:29:46 by amarabin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,8 @@ static int	move_vills(t_game *game)
 		}
 		free(game->a_vills[vill_c - 1]);
 		game->a_vills[vill_c - 1] = create_pp(p.r, p.c, 0, 0);
+		if (!game->a_vills[vill_c - 1])
+			c_throw(game, NULL, NULL);
 		game->map[p.r][p.c] = 'V';
 		p_img(game, get_sprite_frame(game->vill_spt[vill_c - 1]), p.r, p.c);
 	}

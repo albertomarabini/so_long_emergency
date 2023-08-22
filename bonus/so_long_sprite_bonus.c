@@ -6,7 +6,7 @@
 /*   By: amarabin <amarabin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 02:45:23 by amarabin          #+#    #+#             */
-/*   Updated: 2023/08/17 07:45:26 by amarabin         ###   ########.fr       */
+/*   Updated: 2023/08/20 18:26:11 by amarabin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,8 @@ static int	load_sprite_assets(t_stp *sprite, void *mlx)
 	{
 		tmp = itoa(i);
 		name = ft_strjoin(tmp, sprite->ext);
+		if (!tmp || !name)
+			return (err(strdup("Unable to load sprite: "), c_strerror()));
 		free(tmp);
 		sprite->frames[i + 1] = NULL;
 		sprite->frames[i] = l_img(mlx, sprite->path, name, ASSET_SIZE);
@@ -53,6 +55,8 @@ t_stp	*init_sprite(t_game *game, t_point start_len, char *path, char *ext)
 {
 	t_stp	*sprite;
 
+	if (path == NULL || ext == NULL)
+		c_throw(game, NULL, NULL);
 	sprite = (t_stp *)c_alloc(game, sizeof(t_stp));
 	sprite->len = start_len.c;
 	sprite->stop = 0;

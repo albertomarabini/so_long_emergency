@@ -6,7 +6,7 @@
 /*   By: amarabin <amarabin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 20:15:54 by prossi            #+#    #+#             */
-/*   Updated: 2023/08/18 02:11:22 by amarabin         ###   ########.fr       */
+/*   Updated: 2023/08/22 08:34:47 by amarabin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ typedef struct s_point
 
 typedef struct s_sel_tgt_obj_mechanics
 {
-	t_point				**(*sort)(t_point **, int);
+	t_point				**(*sort)(t_point **);
 	int					best;
 }						t_sel_tgt_obj_mechanics;
 
@@ -99,8 +99,9 @@ typedef struct s_game
 	int					hero_r;
 	int					hero_c;
 	int					moves;
+	int					is_safe;
+	void				*ancestor;
 	int					run;
-	int					run_unsafe;
 	t_point				run_to;
 	void				*mlx;
 	void				*win;
@@ -138,18 +139,20 @@ long long				elapsed_time(struct timespec *s, t_game *game);
 t_pair					new_ppair(t_point a, t_point b);
 char					**duplicate_map(t_game *gm);
 int						inst_tgt_path_structs(int n, int ****c_paths_m,
-							t_point ****c_points);
+							t_point ***c_points);
 /* /utils/utils2_bonus.c */
 t_game					*create_safe_game(t_game *gm, int safe_w);
 int						**init_path_matrix(t_game *game);
-t_sel_tgt_obj_mechanics	sto_mech(t_point **(*sort)(t_point **, int), int best);
+t_sel_tgt_obj_mechanics	sto_mech(t_point **(*sort)(t_point **), int best);
 /* /utils/utils3_bonus.c */
 int						err(char *err_1, char *err_2);
 int						out(char *s1, char *s2, t_game *game);
+void					c_throw(t_game *game, char *err_1, char *err_2);
 /* /utils/p_utils_bonus.c */
 t_point					duplicate_p(t_point p);
 t_point					*create_pp(int r, int c, int val, int val2);
 t_point					*p_to_pp(t_point p);
+t_point					pp_to_p(t_point *p);
 /* /utils/p_utils2_bonus.c */
 t_point					create_p(int r, int c, int val, int val2);
 t_point					null_p(void);
@@ -160,18 +163,19 @@ void					p_img(t_game *game, void *img, int r, int c);
 int						intantiate_mlx_window(t_game *gm, char *name);
 int						mlx_destroy_hook(void *mlx_ptr, void *win_ptr);
 /* /ft/ap_utils_bonus.c */
-t_point					**rev_sort_ap(t_point **arr, int n);
+t_point					**rev_sort_ap(t_point **arr);
 void					free_ap(t_point **arr);
 int						len_ap(t_point **p);
 /* /ft/ap_utils2_bonus.c */
-t_point					**sort_ap(t_point **arr, int n);
-t_point					**rev_ap(t_point **arr, int n);
+t_point					**sort_ap(t_point **arr);
+t_point					**rev_ap(t_point **arr);
+t_point					**sort_avg_ap(t_point **arr);
 /* /ft/a_utils_bonus.c*/
 void					a_shift(int *a, int head, int length);
 void					set_a(int *a, int length, int value);
 void					null_a(int *a, int length);
 int						is_null_a(int *a, int length);
-int						a_contains(int *a, int val, int length);
+int						a_contn(int *a, int val, int length);
 /* /utils/read_map_bonus.c */
 int						read_map(t_game *game, int fd);
 
@@ -209,10 +213,9 @@ void					sel_tgt(int ***pts, t_point p, int (*q)[TGT_Q_LEN],
 t_point					is_path_to_tgt_nsafe(t_point t, t_game *gm,
 							int ***v_paths_m, char *pattern_c);
 /* /game_logic/collect_paths_bonus.c */
-int						***collect_corn_paths(t_game *gm, t_point ***c_points,
-							char *pattern_c);
+void					collect_corn_paths(t_game *gm, char *pattern_c);
 int						collect_tgt_paths(t_game *gm, char **pattern_c);
-int						***collect_vill_paths(t_game *game);
+void					collect_vill_paths(t_game *game);
 /* /game_logic/lay_paths_bonus.c */
 t_point					trak_back_paths(t_point t, int **paths, t_game *game,
 							int tb);
@@ -220,7 +223,7 @@ void					lay_paths(t_pair p, int **pth, t_game *gm, char *ptrn);
 /* /game_logic/freers_bonus.c */
 void					free_path(int **paths);
 void					free_paths_matrix(int ***paths);
-void					free_safe_map(t_game *game);
+void					free_safe_game(t_game *game);
 void					free_tgt_path_structs(int ***c_paths_m,
 							t_point **c_points);
 

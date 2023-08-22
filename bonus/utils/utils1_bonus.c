@@ -6,7 +6,7 @@
 /*   By: amarabin <amarabin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 17:25:32 by amarabin          #+#    #+#             */
-/*   Updated: 2023/08/17 04:19:36 by amarabin         ###   ########.fr       */
+/*   Updated: 2023/08/22 20:40:53 by amarabin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,21 +15,10 @@
 void	*c_alloc(t_game *game, size_t size)
 {
 	void	*ptr;
-	char	*err;
 
 	ptr = malloc(size);
 	if (!ptr)
-	{
-		err = c_strerror();
-		printf("Error\nMemory allocation failure\n");
-		if (err && err[0])
-			printf(" reason: %s\n", err);
-		if (game && game->mlx)
-			mlx_loop_end(game->mlx);
-		if (game)
-			free_game(game);
-		exit(1);
-	}
+		c_throw(game, "Memory Allocation Error", NULL);
 	return (ptr);
 }
 
@@ -76,15 +65,21 @@ char	**duplicate_map(t_game *gm)
 	new_map[gm->map_h] = NULL;
 	i = 0;
 	while (gm->map_h > i++)
+	{
 		new_map[i - 1] = strdup(gm->map[i - 1]);
+		if (new_map[i - 1] == NULL)
+			c_throw(gm, NULL, NULL);
+	}
 	return (new_map);
 }
 
-int	inst_tgt_path_structs(int n, int ****c_paths_m, t_point ****c_points)
+int	inst_tgt_path_structs(int n, int ****c_paths_m, t_point ***c_points)
 {
 	*c_paths_m = (int ***)malloc(sizeof(int **) * (n + 1));
-	**c_points = (t_point **)malloc(sizeof(t_point *) * (n + 1));
-	if (!**c_points)
+	if (!*c_paths_m)
+		return (0);
+	*c_points = (t_point **)malloc(sizeof(t_point *) * (n + 1));
+	if (!*c_points)
 	{
 		free(*c_paths_m);
 		return (0);

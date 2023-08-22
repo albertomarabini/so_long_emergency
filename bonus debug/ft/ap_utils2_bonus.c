@@ -6,7 +6,7 @@
 /*   By: amarabin <amarabin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 07:26:49 by amarabin          #+#    #+#             */
-/*   Updated: 2023/08/17 03:21:07 by amarabin         ###   ########.fr       */
+/*   Updated: 2023/08/22 06:47:46 by amarabin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,14 +22,17 @@ static void	swap_sort(t_point **arr, int j)
 }
 
 /**
- * sorts an array of p ascending. Returns the value to save some space
- * somewhere else
+ * sorts an array of p ascending by the val, val2 values.
+ *Returns the value to save some space somewhere else but
+ * the array is sorted in place.
  */
-t_point	**sort_ap(t_point **arr, int n)
+t_point	**sort_ap(t_point **arr)
 {
 	int	i;
 	int	j;
+	int	n;
 
+	n = len_ap(arr);
 	i = 0;
 	while (i < n - 1)
 	{
@@ -48,11 +51,13 @@ t_point	**sort_ap(t_point **arr, int n)
 	return (arr);
 }
 
-t_point	**rev_ap(t_point **arr, int n)
+t_point	**rev_ap(t_point **arr)
 {
 	int		i;
 	t_point	*temp;
+	int		n;
 
+	n = len_ap(arr);
 	i = 0;
 	n -= 1;
 	while (i < n)
@@ -62,6 +67,52 @@ t_point	**rev_ap(t_point **arr, int n)
 		arr[n] = temp;
 		i++;
 		n--;
+	}
+	return (arr);
+}
+
+int	avg_ap(t_point **arr)
+{
+	int	sum;
+	int	count;
+	int	i;
+
+	sum = 0;
+	count = 0;
+	i = 0;
+	while (arr[i++])
+	{
+		if (arr[i - 1]->val != INT_MAX)
+		{
+			sum += arr[i - 1]->val;
+			count++;
+		}
+	}
+	if (count == 0)
+		return (0);
+	return (sum / count);
+}
+
+t_point	**sort_avg_ap(t_point **arr)
+{
+	int	n;
+	int	avg;
+	int	j;
+	int	i;
+
+	avg = avg_ap(arr);
+	n = len_ap(arr);
+	i = 0;
+	while (i < n - 1)
+	{
+		j = 0;
+		while (j < n - i - 1)
+		{
+			if (abs(arr[j]->val - avg) > abs(arr[j + 1]->val - avg))
+				swap_sort(arr, j);
+			j++;
+		}
+		i++;
 	}
 	return (arr);
 }

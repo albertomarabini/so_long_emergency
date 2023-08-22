@@ -6,7 +6,7 @@
 /*   By: amarabin <amarabin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/26 08:17:55 by amarabin          #+#    #+#             */
-/*   Updated: 2023/08/17 12:22:27 by amarabin         ###   ########.fr       */
+/*   Updated: 2023/08/22 08:34:37 by amarabin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,12 @@ void	free_game(t_game *game)
 	free_sprite(game, game->hero_spt);
 	if (game->vill_spt)
 		free_sprite_a(game, game->vill_spt);
+	if (game->v_paths_m)
+		free_paths_matrix(game->v_paths_m);
+	if (game->c_paths_m)
+		free_paths_matrix(game->c_paths_m);
+	if (game->c_points)
+		free_ap(game->c_points);
 	if (game->win)
 		mlx_destroy_window(game->mlx, game->win);
 	if (game->mlx)
@@ -87,7 +93,7 @@ static t_game	*init_game(char *file)
 
 	fd = open(file, O_RDONLY);
 	if (fd < 0)
-		err(strdup("Unable to open file: "), c_strerror());
+		c_throw(game, strdup("Unable to open file: "), c_strerror());
 	game = (t_game *)malloc(sizeof(t_game));
 	if (game == NULL)
 		exit(1);
@@ -104,8 +110,8 @@ static t_game	*init_game(char *file)
 	game->exits = 0;
 	game->colls = 0;
 	game->vills = 0;
+	game->is_safe = 0;
 	game->run = 0;
-	game->run_unsafe = 0;
 	null_a(game->tgt_el_q, TGT_Q_LEN);
 	game->hero_clock = c_alloc(game, sizeof(struct timespec));
 	game->vill_clock = c_alloc(game, sizeof(struct timespec));

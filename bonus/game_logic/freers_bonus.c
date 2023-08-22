@@ -6,7 +6,7 @@
 /*   By: amarabin <amarabin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 02:24:58 by amarabin          #+#    #+#             */
-/*   Updated: 2023/08/17 03:34:27 by amarabin         ###   ########.fr       */
+/*   Updated: 2023/08/20 19:46:39 by amarabin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	free_paths_matrix(int ***paths)
 	free(paths);
 }
 
-void	free_safe_map(t_game *game)
+void	free_safe_game(t_game *game)
 {
 	if (game->map != NULL)
 		free_map(game->map, game->map_h);

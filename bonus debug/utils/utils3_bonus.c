@@ -6,17 +6,32 @@
 /*   By: amarabin <amarabin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/27 17:41:20 by amarabin          #+#    #+#             */
-/*   Updated: 2023/08/17 05:17:44 by amarabin         ###   ########.fr       */
+/*   Updated: 2023/08/20 20:12:21 by amarabin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../so_long_bonus.h"
 
-static void	print_on_debugger(t_game *game)
+static void	print_score(t_game *game, int i_out, char *msg, int y_offset)
 {
-	int		r;
-	int		c;
 	char	*out;
+	int		h;
+	int		col;
+
+	col = 0x00FFFFFF;
+	h = game->map_h * ASSET_SIZE;
+	out = itoa(i_out);
+	if (!out)
+		c_throw(game, NULL, NULL);
+	mlx_string_put(game->mlx, game->win, 10, h + y_offset, col, msg);
+	mlx_string_put(game->mlx, game->win, 80, h + y_offset, col, out);
+	free(out);
+}
+
+static void	print_game_status(t_game *game)
+{
+	int	r;
+	int	c;
 
 	c = 0;
 	while (c < game->map_w)
@@ -26,18 +41,11 @@ static void	print_on_debugger(t_game *game)
 			game->map_h * ASSET_SIZE);
 		c++;
 	}
-	c = 0x00FFFFFF;
-	r = game->map_h * ASSET_SIZE;
-	out = itoa(game->moves);
-	mlx_string_put(game->mlx, game->win, 10, r + 10, c, "Moves: ");
-	mlx_string_put(game->mlx, game->win, 80, r + 10, c, out);
-	free(out);
-	out = itoa(game->colls);
-	mlx_string_put(game->mlx, game->win, 10, r + 30, c, "Colls left: ");
-	mlx_string_put(game->mlx, game->win, 80, r + 30, c, out);
-	free(out);
+	print_score(game, game->moves, "Moves:", 10);
+	print_score(game, game->colls, "Colls left:", 30);
 	if (game->msg_out != NULL)
-		mlx_string_put(game->mlx, game->win, 110, r + 10, c, game->msg_out);
+		mlx_string_put(game->mlx, game->win, 110, game->map_h * ASSET_SIZE + 10,
+			0x00FFFFFF, game->msg_out);
 }
 
 int	out(char *s1, char *s2, t_game *game)
@@ -51,8 +59,10 @@ int	out(char *s1, char *s2, t_game *game)
 			game->msg_out = ft_strjoin(s1, s2);
 		else
 			game->msg_out = strdup(s1);
+		if (!game->msg_out)
+			c_throw(game, NULL, NULL);
 	}
-	print_on_debugger(game);
+	print_game_status(game);
 	if (s1)
 		free(s1);
 	if (s2)
@@ -75,4 +85,27 @@ int	err(char *err_1, char *err_2)
 		putstr_fd("\n", 2);
 	}
 	return (-1);
+}
+
+void	c_throw(t_game *game, char *err_1, char *err_2)
+{
+	t_game	*gm;
+
+	if (!err_1)
+		err_1 = "Generic Error\0";
+	if (!err_2)
+		err_2 = c_strerror();
+	err(err_1, err_2);
+	if (game->is_safe && game->ancestor)
+	{
+		gm = (t_game *)(game->ancestor);
+		free_safe_game(game);
+	}
+	else
+		gm = game;
+	if (gm && gm->mlx)
+		mlx_loop_end(gm->mlx);
+	if (gm)
+		free_game(gm);
+	exit(1);
 }

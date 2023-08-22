@@ -6,7 +6,7 @@
 /*   By: amarabin <amarabin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 08:25:31 by amarabin          #+#    #+#             */
-/*   Updated: 2023/08/17 04:23:08 by amarabin         ###   ########.fr       */
+/*   Updated: 2023/08/22 11:28:37 by amarabin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,5 +50,19 @@ t_point	*p_to_pp(t_point p)
 	point->c = p.c;
 	point->val = p.val;
 	point->val2 = p.val2;
+	return (point);
+}
+
+/**
+ * creates a new point  with the data of the passed point pointer.
+ */
+t_point	pp_to_p(t_point *p)
+{
+	t_point	point;
+
+	point.r = p->r;
+	point.c = p->c;
+	point.val = p->val;
+	point.val2 = p->val2;
 	return (point);
 }

@@ -6,46 +6,11 @@
 /*   By: amarabin <amarabin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/27 17:24:07 by amarabin          #+#    #+#             */
-/*   Updated: 2023/08/17 11:56:21 by amarabin         ###   ########.fr       */
+/*   Updated: 2023/08/22 20:37:02 by amarabin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long_bonus.h"
-
-static int	move_vills(t_game *game)
-{
-	int		vill_c;
-	t_point	p;
-	t_point	h;
-	t_point	*v;
-
-	vill_c = 0;
-	while (game->vills > vill_c++)
-	{
-		v = game->a_vills[vill_c - 1];
-		h = create_p(game->hero_r, game->hero_c, 0, 0);
-		p = find_shortest_path(*v, h, game, 1);
-		if (p.val == INT_MAX)
-			return (0);
-		if (p.r == game->hero_r && p.c == game->hero_c)
-		{
-			game->is_on = 0;
-			return (out(strdup("You Lose!"), NULL, game));
-		}
-		p_img(game, game->i.floor, v->r, v->c);
-		game->map[v->r][v->c] = '0';
-		if (game->o_map[v->r][v->c] == 'C')
-		{
-			p_img(game, game->i.coll, v->r, v->c);
-			game->map[v->r][v->c] = 'C';
-		}
-		free(game->a_vills[vill_c - 1]);
-		game->a_vills[vill_c - 1] = create_pp(p.r, p.c, 0, 0);
-		game->map[p.r][p.c] = 'V';
-		p_img(game, get_sprite_frame(game->vill_spt[vill_c - 1]), p.r, p.c);
-	}
-	return (0);
-}
 
 static void	catch_coll(t_game *game, int r, int c)
 {

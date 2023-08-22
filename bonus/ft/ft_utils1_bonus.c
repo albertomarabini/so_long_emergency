@@ -6,7 +6,7 @@
 /*   By: amarabin <amarabin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 16:04:07 by amarabin          #+#    #+#             */
-/*   Updated: 2023/08/15 12:27:04 by amarabin         ###   ########.fr       */
+/*   Updated: 2023/08/20 18:23:45 by amarabin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,11 @@
 
 char	*c_strerror(void)
 {
+	char	*err;
+
+	err = strdup(strerror(errno));
+	if (!err)
+		err = NULL;
 	return (strdup(strerror(errno)));
 }
 
@@ -89,6 +94,19 @@ char	*itoa(int n)
 	return (itoa_to_str(n, l));
 }
 
+/**
+ * Converts x and y coordinates into a comma-separated string representation.
+ *
+ *
+ * Example:
+ *
+ * int x = 5, y = 10;
+ * char* result = xyta(x, y);
+ * printf("%s\n", result);  // Outputs: "5,10"
+ * free(result);
+ *
+ * @note The caller should ensure to free the returned string after use.
+ */
 char	*xyta(int x, int y)
 {
 	char	*str;

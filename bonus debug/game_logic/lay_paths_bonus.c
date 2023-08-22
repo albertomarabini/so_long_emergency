@@ -6,7 +6,7 @@
 /*   By: amarabin <amarabin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 18:34:05 by amarabin          #+#    #+#             */
-/*   Updated: 2023/08/14 18:34:23 by amarabin         ###   ########.fr       */
+/*   Updated: 2023/08/21 16:42:37 by amarabin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ t_point	trak_back_paths(t_point t, int **paths, t_game *game, int tb)
 	if (t.r < game->map_h - 1 && paths[t.r + 1][t.c] < next_p.val)
 		next_p = create_p(t.r + 1, t.c, paths[t.r + 1][t.c], 2);
 	if (t.c > 0 && paths[t.r][t.c - 1] < next_p.val)
-		next_p = create_p(t.r, t.c - 1, paths[t.r][t.c - 1], 1);
+		next_p = create_p(t.r, t.c - 1, paths[t.r][t.c - 1], 3);
 	if (t.c < game->map_w - 1 && paths[t.r][t.c + 1] < next_p.val)
 		next_p = create_p(t.r, t.c + 1, paths[t.r][t.c + 1], 1);
 	if (next_p.val == 0)
@@ -114,7 +114,9 @@ t_point	trak_back_paths(t_point t, int **paths, t_game *game, int tb)
  *        Example: for villain is E1, for hero with collectibles is EVC1,
  *        for hero without collectibles is EV1
  *
- * @remark 'V' positions are going to be replaced in the map once villains move
+ * @remark 'V' positions will be replaced in the map once villains move
+ * @remark: in order to function the attribute val of p.a has to be set to
+ * INT_MAX
  */
 void	lay_paths(t_pair p, int **pth, t_game *gm, char *ptrn)
 {

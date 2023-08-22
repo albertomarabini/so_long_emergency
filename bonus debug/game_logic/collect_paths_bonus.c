@@ -6,7 +6,7 @@
 /*   By: amarabin <amarabin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 02:04:30 by amarabin          #+#    #+#             */
-/*   Updated: 2023/08/18 02:07:50 by amarabin         ###   ########.fr       */
+/*   Updated: 2023/08/20 18:47:36 by amarabin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,36 +18,35 @@
  * @param game      The game.
  * @param c_points  Pointer to the array of t_point which will store the
  *                  a_corners.
- * @return      A 3D array of integer representing the paths from each corner
- *              to the hero. The last element of the outermost array is set
- *              to NULL as a sentinel.
- *              If memory allocation fails the function returns NULL.
+ * @return      it sets  gm->c_points[i] and gm->c_paths_m used for target
+ *              exploration using each map's corner position and relative
+ *              paths from each to the hero.
  */
-int	***collect_corn_paths(t_game *gm, t_point ***c_points, char *pattern_c)
+void	collect_corn_paths(t_game *gm, char *pattern_c)
 {
 	int		i;
 	t_point	stt;
 	t_point	hero;
 	t_point	*c;
-	int		***c_paths_m;
 
 	i = 0;
-	if (!inst_tgt_path_structs(CORNER_COUNT, &c_paths_m, &c_points))
-		return (NULL);
+	// SI FOTTA L'HAPPY PATH!
+	if (!inst_tgt_path_structs(CORNER_COUNT, &(gm->c_paths_m), &(gm->c_points)))
+		c_throw(gm, NULL, NULL);
 	hero = create_p(gm->hero_r, gm->hero_c, 0, 0);
 	while (i < CORNER_COUNT)
 	{
 		c = gm->a_corners[i++];
-		(*c_points)[i - 1] = p_to_pp(*c);
-		c_paths_m[i - 1] = init_path_matrix(gm);
-		if (!c_paths_m[i - 1])
-			return (NULL);
+		gm->c_points[i - 1] = p_to_pp(*c);
+		gm->c_paths_m[i - 1] = init_path_matrix(gm);
+		// SI FOTTA L'HAPPY PATH!
+		// if (!gm->c_paths_m[i - 1])
+		// 	return (NULL);
 		stt = create_p(gm->a_corners[i - 1]->r, gm->a_corners[i - 1]->c, 0, 0);
-		lay_paths(new_ppair(stt, hero), c_paths_m[i - 1], gm, pattern_c);
+		lay_paths(new_ppair(stt, hero), gm->c_paths_m[i - 1], gm, pattern_c);
 	}
-	c_paths_m[i] = NULL;
-	(*c_points)[i] = NULL;
-	return (c_paths_m);
+	gm->c_paths_m[i] = NULL;
+	gm->c_points[i] = NULL;
 }
 
 /**
@@ -70,10 +69,12 @@ static int	***collect_exit_paths(t_game *gm, t_point ***c_points,
 	int		***c_paths_m;
 
 	i = 0;
-	if (!inst_tgt_path_structs(len_ap(gm->a_exits), &c_paths_m, &c_points))
+	if (!inst_tgt_path_structs(len_ap(gm->a_exits), &c_paths_m, c_points))
 		return (NULL);
 	while (gm->a_exits[i])
 	{
+		if (gm->is_safe && gm->map[gm->a_colls[i]->r][gm->a_colls[i]->c] == 1)
+			continue ;
 		(*c_points)[i] = p_to_pp(*(gm->a_exits[i]));
 		c_paths_m[i++] = init_path_matrix(gm);
 		if (!*c_paths_m[i - 1])
@@ -109,11 +110,12 @@ static int	***collect_coll_paths(t_game *gm, t_point ***c_points,
 
 	i = 0;
 	j = 0;
-	if (!inst_tgt_path_structs(len_ap(gm->a_colls), &c_paths_m, &c_points))
+	if (!inst_tgt_path_structs(len_ap(gm->a_colls), &c_paths_m, c_points))
 		return (NULL);
-	while (gm->a_colls[j])
+	while (gm->a_colls[j++])
 	{
-		if (gm->a_colls[j++]->val != 0)
+		if (gm->a_colls[j - 1]->val != 0 || (gm->is_safe
+				&& gm->map[gm->a_colls[j - 1]->r][gm->a_colls[j - 1]->c] == 1))
 			continue ;
 		(*c_points)[i] = p_to_pp(*(gm->a_colls[j - 1]));
 		c_paths_m[i++] = init_path_matrix(gm);
@@ -169,29 +171,23 @@ int	collect_tgt_paths(t_game *gm, char **pattern_c)
  *
  * @param       game    The game.
  *
- * @return      A 3D array of integer representing the paths from each vill
- *              to the hero. The last element of the outermost array is set
- *              to NULL as a sentinel.
- *              If memory allocation fails the function returns NULL.
+ * @return      it sets gm->v_paths_m representing the paths from each vill
+ *              to the hero.
  */
-int	***collect_vill_paths(t_game *game)
+void	collect_vill_paths(t_game *gm)
 {
-	int		***v_paths_m;
 	int		i;
 	t_point	stt;
 	t_point	hero;
 
 	i = 0;
-	hero = create_p(game->hero_r, game->hero_c, INT_MAX, 0);
-	v_paths_m = (int ***)c_alloc(game, sizeof(int **) * (game->vills + 1));
-	while (i < game->vills)
+	hero = create_p(gm->hero_r, gm->hero_c, INT_MAX, 0);
+	gm->v_paths_m = (int ***)c_alloc(gm, sizeof(int **) * (gm->vills + 1));
+	while (i < gm->vills)
 	{
-		v_paths_m[i++] = init_path_matrix(game);
-		if (!v_paths_m[i - 1])
-			return (NULL);
-		stt = create_p(game->a_vills[i - 1]->r, game->a_vills[i - 1]->c, 0, 0);
-		lay_paths(new_ppair(stt, hero), v_paths_m[i - 1], game, "E1");
+		gm->v_paths_m[i++] = init_path_matrix(gm);
+		stt = create_p(gm->a_vills[i - 1]->r, gm->a_vills[i - 1]->c, 0, 0);
+		lay_paths(new_ppair(stt, hero), gm->v_paths_m[i - 1], gm, "E1");
 	}
-	v_paths_m[i] = NULL;
-	return (v_paths_m);
+	gm->v_paths_m[i] = NULL;
 }

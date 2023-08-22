@@ -6,16 +6,54 @@
 /*   By: amarabin <amarabin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 03:10:07 by amarabin          #+#    #+#             */
-/*   Updated: 2023/08/17 04:17:50 by amarabin         ###   ########.fr       */
+/*   Updated: 2023/08/22 00:32:52 by amarabin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../so_long_bonus.h"
 
+
+void print_moves(t_point p, t_point **movs) {
+    int i = 0;
+	printf("Moves from %i,%i\n", p.r, p.c);
+    while (movs[i]) {
+        printf("Paths %d: r=%d, c=%d len=%i, i=%i\n", i, movs[i]->r, movs[i]->c, movs[i]->val, movs[i]->val2 );
+        i++;
+    }
+}
+
+static void	print_int_map(int **o_map, int r, int c)
+{
+	for (int k = 0; k < c; k++){
+		if(k % 5 == 0)
+			printf("|");
+		else
+			printf(" ");
+	}
+	printf("\n");
+	for (int i = 0; i < r; i++)
+	{
+		printf("%2i - ", i);
+		for (int k = 0; k < c; k++)
+		{
+			if (o_map[i][k] != INT_MAX)
+				printf("%2i ", o_map[i][k]);
+			else
+				printf("X  ");
+		}
+		printf("\n");
+	}
+}
+
 /**
  * Creates an array of potential paths to reach the targets (either corner,
  * collectible or villain) from the variable pts collecting the
  * 4 cardinals around the current point p for each path.
+ * Each created point contains:
+ * r: the r of the cardinal we are examining
+ * c: the c of the cardinal we are examining
+ * val: the length of the path between the starting point and the target
+ * val 2: the index of the path/target being examined
  */
 static t_point	**potnt_tgt_moves(int ***pts, int len_pts, t_point p)
 {
@@ -77,12 +115,12 @@ void	sel_tgt(int ***pts, t_point p, int (*q)[TGT_Q_LEN],
 		len_pts++;
 	i = 4 * len_pts;
 	movs = potnt_tgt_moves(pts, len_pts, p);
-	m.sort(movs, i);
+	m.sort(movs);
+	print_moves(p, movs);
 	i = 0;
 	while (movs[i] != NULL)
 	{
-		if (movs[i]->val != INT_MAX && !a_contains(*q, movs[i]->val2,
-				TGT_Q_LEN))
+		if (movs[i]->val != INT_MAX && !a_contn(*q, movs[i]->val2, TGT_Q_LEN))
 			break ;
 		i++;
 	}
@@ -115,16 +153,21 @@ void	sel_tgt(int ***pts, t_point p, int (*q)[TGT_Q_LEN],
  *              approaching villain.
  *
  * Internal workings:
- * The function first initializes a paths matrix,  then creates a start
- * point for the hero and fills the path using lay_paths.
- * It then select as target object the closest villains and computes the
- * potential collision with the hero
+ * Here we are examining a target t (either coll or exit at a time)
+ * Using lay_paths / trak_back_paths we determine if there is a path
+ * between hero and t (the shortest one).
+ * If there is then using the squaring between hero, t and the closest
+ * villains (whose index will be contained in tgt_v queue), we find out if
+ * moving there there is any chance a crash will happen.
+ * At the first villain we find with the potential for crashing
+ * we quit. Else the point nxt (the first in the shortest path from hero to t)
+ * will carry his safety (or unsafety) value in nxt->val;
  */
 t_point	is_path_to_tgt_nsafe(t_point t, t_game *gm, int ***v_paths_m,
 		char *pattern_c)
 {
 	int		**curr_tgt_path;
-	t_point	strt;
+	t_point	hero;
 	t_point	nxt;
 	int		tgt_v[TGT_Q_LEN];
 	int		i;
@@ -132,8 +175,9 @@ t_point	is_path_to_tgt_nsafe(t_point t, t_game *gm, int ***v_paths_m,
 	curr_tgt_path = init_path_matrix(gm);
 	if (!curr_tgt_path)
 		return (null_p());
-	strt = create_p(gm->hero_r, gm->hero_c, 0, 0);
-	lay_paths(new_ppair(strt, t), curr_tgt_path, gm, pattern_c);
+	hero = create_p(gm->hero_r, gm->hero_c, 0, 0);
+	lay_paths(new_ppair(hero, t), curr_tgt_path, gm, pattern_c);
+	print_int_map(curr_tgt_path, gm->map_h, gm->map_w);
 	nxt = trak_back_paths(t, curr_tgt_path, gm, 1);
 	if (!is_null_p(nxt))
 	{
@@ -142,7 +186,7 @@ t_point	is_path_to_tgt_nsafe(t_point t, t_game *gm, int ***v_paths_m,
 		while (trn(gm->vills > TGT_Q_LEN + 1, TGT_Q_LEN + 1, gm->vills) > i)
 		{
 			sel_tgt(v_paths_m, t, &tgt_v, sto_mech(sort_ap, 1));
-			nxt.val = will_it_crash(strt, *(gm->a_vills[tgt_v[0]]), t, gm);
+			nxt.val = will_it_crash(hero, *(gm->a_vills[tgt_v[0]]), t, gm);
 			i = trn(nxt.val != 0, TGT_Q_LEN + 1, i + 1);
 		}
 	}

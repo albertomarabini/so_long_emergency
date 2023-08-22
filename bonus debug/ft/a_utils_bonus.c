@@ -6,7 +6,7 @@
 /*   By: amarabin <amarabin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 07:17:22 by amarabin          #+#    #+#             */
-/*   Updated: 2023/08/14 18:34:40 by amarabin         ###   ########.fr       */
+/*   Updated: 2023/08/21 11:37:19 by amarabin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ int	is_null_a(int *a, int length)
  * @param val The value to be checked.
  * @param length The length of the array.
  */
-int	a_contains(int *a, int val, int length)
+int	a_contn(int *a, int val, int length)
 {
 	int	i;
 
