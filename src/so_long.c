@@ -6,7 +6,7 @@
 /*   By: amarabin <amarabin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/26 08:17:55 by amarabin          #+#    #+#             */
-/*   Updated: 2023/07/28 13:29:50 by amarabin         ###   ########.fr       */
+/*   Updated: 2023/10/28 11:18:39 by amarabin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,11 +53,11 @@ static void	free_game(t_game *game)
 	free_images(game);
 	if (game->win)
 		mlx_destroy_window(game->mlx, game->win);
-	if (game->mlx)
-	{
-		mlx_destroy_display(game->mlx);
+	// if (game->mlx)
+	// {
+	// 	mlx_destroy_display(game->mlx);
 		free(game->mlx);
-	}
+	//}
 	free(game);
 }
 

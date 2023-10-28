@@ -3,7 +3,7 @@ BONUS_NAME = $(NAME)_bonus
 
 CC = gcc
 FLAGS = -Wall -Wextra -Werror
-LIBS = -lmlx -framework OpenGL -framework AppKit
+LIBS = -I /libs/MLX42/include/MLX42 -framework Cocoa -framework OpenGL -framework IOKit -lglfw -L"/Users/$(USER)/.brew/opt/glfw/lib/"
 
 GNL_DIR = get_next_line
 SL_DIR = src
@@ -15,7 +15,7 @@ BONUS_MAIN_DIR = bonus
 LIBGNL = libgnl.a
 
 GNL_FILES = get_next_line.c get_next_line_utils.c
-SL_FILES = so_long.c so_long_utils.c so_long_read_map.c so_long_init_mlx.c so_long_gameplay.c so_long_ft_utils.c
+SL_FILES = so_long.c so_long_utils.c so_long_read_map.c so_long_init_mlx.c so_long_gameplay.c so_long_ft_utils.c so_long_ft_utils2.c
 SL_BONUS_FILES_UTILS = utils1_bonus.c utils2_bonus.c utils3_bonus.c utils4_bonus.c utils5_bonus.c read_map_bonus.c read_map2_bonus.c mlx_utils_bonus.c
 SL_BONUS_FILES_GAME_LOGIC = find_hero_move_bonus.c freers_bonus.c find_shortest_path_bonus.c lay_paths_bonus.c collect_paths_bonus.c sel_tgt_obj_bonus.c
 SL_BONUS_FILES_FT = ft_utils2_bonus.c ft_utils1_bonus.c p_utils_bonus.c p_utils2_bonus.c a_utils_bonus.c ap_utils_bonus.c ap_utils2_bonus.c
@@ -28,20 +28,22 @@ SL_BONUS_SRCS_GAME_LOGIC = $(addprefix $(BONUS_MAIN_DIR)/$(BONUS_GAME_LOGIC_DIR)
 SL_BONUS_SRCS_UTILS = $(addprefix $(BONUS_MAIN_DIR)/$(BONUS_UTILS_DIR)/, $(SL_BONUS_FILES_UTILS))
 SL_BONUS_SRCS_MAIN = $(addprefix $(BONUS_MAIN_DIR)/, $(SL_BONUS_FILES_MAIN))
 
-all: mlx $(NAME)
+all: MLX42 $(NAME)
 
-bonus: mlx $(LIBGNL)
-	$(CC) $(FLAGS)  $(SL_BONUS_SRCS_FT) $(SL_BONUS_SRCS_GAME_LOGIC) $(SL_BONUS_SRCS_UTILS) $(SL_BONUS_SRCS_MAIN) -L. -lgnl $(LIBS) -o $(BONUS_NAME)
+bonus: MLX42 $(LIBGNL)
+	$(CC) $(FLAGS)  $(SL_BONUS_SRCS_FT) $(SL_BONUS_SRCS_GAME_LOGIC) $(SL_BONUS_SRCS_UTILS) $(SL_BONUS_SRCS_MAIN) -Llibs/MLX42/include -lgnl $(LIBS) -o $(BONUS_NAME)
 
-mlx:
-	make -C ./minilibx
+MLX42:
+	mkdir -p libs
+	cd libs && git clone https://github.com/codam-coding-college/MLX42.git
+	cd libs/MLX42 && cmake -B build && cmake --build build -j4
 
 $(LIBGNL): $(GNL_SRCS)
 	$(CC) $(FLAGS) -c $^
 	ar rcs $@ get_next_line.o get_next_line_utils.o
 
 $(NAME): $(LIBGNL) $(SL_SRCS)
-	$(CC) $(FLAGS) $(SL_SRCS) -L. -lgnl -L./minilibx $(LIBS) -g -o $(NAME)
+	$(CC) $(FLAGS) $(SL_SRCS) -L. -lgnl $(LIBS) -o $(NAME)
 
 valgrind: debug
 	valgrind -s --suppressions=./utils/suppressions.supp --leak-check=full --show-leak-kinds=all --log-file=leaks.log ../debugger/a.out maps/map1.ber
@@ -50,17 +52,18 @@ valgrind-bonus: debug-bonus
 	valgrind -s --suppressions=./utils/suppressions.supp --leak-check=full --show-leak-kinds=all --log-file=leaks.log ../debugger/a.out maps/lab2_bonus.ber
 
 debug: $(LIBGNL) $(SL_SRCS)
-	$(CC) $(FLAGS) -g $(SL_SRCS) -L. -lgnl -L./minilibx $(LIBS) -o ../debugger/a.out
+	$(CC) $(FLAGS) -g $(SL_SRCS) -L. -lgnl $(LIBS) -o ../debugger/a.out
 
 debug-bonus: mlx $(LIBGNL)
 	$(CC) $(FLAGS) -g $(SL_BONUS_SRCS_FT) $(SL_BONUS_SRCS_GAME_LOGIC) $(SL_BONUS_SRCS_UTILS) $(SL_BONUS_SRCS_MAIN) -L. -lgnl $(LIBS) -o ../debugger/a.out
 
 clean:
-	make -C ./minilibx clean
+	#make -C ./minilibx clean
 	rm -f get_next_line.o get_next_line_utils.o $(NAME) $(BONUS_NAME) $(LIBGNL)
 
 fclean: clean
 	rm -f $(LIBGNL)
+	rm -rf libs
 
 re: fclean all
 

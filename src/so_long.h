@@ -6,7 +6,7 @@
 /*   By: amarabin <amarabin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 20:15:54 by prossi            #+#    #+#             */
-/*   Updated: 2023/08/15 19:01:08 by amarabin         ###   ########.fr       */
+/*   Updated: 2023/10/28 15:46:25 by amarabin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,20 @@
 # define SO_LONG_H
 
 # include "../get_next_line/get_next_line.h"
+// # include "/MLX42/include/glad/glad.h"
+// # include "./MLX42/include/KHR/khrplatform.h"
+// # include "./MLX42/include/lodepng/lodepng.h"
+//# include "../libs/MLX42/include/MLX42/MLX42.h"
+// # include "MLX42.h"
 # include "../minilibx/mlx.h"
-# include "../minilibx/mlx_int.h"
+# include "../minilibx/mlx_opengl.h"
+//# include "../minilibx/mlx_int.h"
 # include <errno.h>
 # include <limits.h>
 # include <stddef.h>
 # include <stdlib.h>
 # include <unistd.h>
+# include <string.h>
 
 # define ASSET_SIZE 32
 
@@ -64,9 +71,12 @@ char			*strdup(const char *s);
 int				read_map(t_game *game, int fd);
 int				init_mlx(t_game *game);
 void			p_img(t_game *game, void *img, int r, int c);
+int	mlx_loop_end(void *mlx_ptr);
 int				err(char *err_1, char *err_2);
 int				out(char *s1, char *s2);
 int				on_keypress(int key, t_game *game);
 int				mlx_destroy_hook(void *mlx_ptr, void *win_ptr);
+char			*strchr(const char *s, int c);
+size_t			strlen(const char *s);
 
 #endif

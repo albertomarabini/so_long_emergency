@@ -6,7 +6,7 @@
 /*   By: amarabin <amarabin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/27 17:24:07 by amarabin          #+#    #+#             */
-/*   Updated: 2023/07/30 12:53:58 by amarabin         ###   ########.fr       */
+/*   Updated: 2023/10/28 17:51:27 by amarabin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,13 +61,13 @@ int	on_keypress(int key, t_game *game)
 		mlx_loop_end(game->mlx);
 		return (out(strdup("Quitting\n"), NULL));
 	}
-	else if (key == 97 || key == 65361)
+	else if (key == 123 || key == 65361)
 		move_to(game->hero_r, game->hero_c - 1, game);
-	else if (key == 119 || key == 65362)
+	else if (key == 126 || key == 65362)
 		move_to(game->hero_r - 1, game->hero_c, game);
-	else if (key == 100 || key == 65363)
+	else if (key == 124 || key == 65363)
 		move_to(game->hero_r, game->hero_c + 1, game);
-	else if (key == 115 || key == 65364)
+	else if (key == 125 || key == 65364)
 		move_to(game->hero_r + 1, game->hero_c, game);
 	return (0);
 }
