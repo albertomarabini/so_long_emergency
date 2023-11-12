@@ -19,7 +19,7 @@ SL_FILES = so_long.c so_long_utils.c so_long_read_map.c so_long_init_mlx.c so_lo
 SL_BONUS_FILES_UTILS = utils1_bonus.c utils2_bonus.c utils3_bonus.c utils4_bonus.c utils5_bonus.c read_map_bonus.c read_map2_bonus.c mlx_utils_bonus.c
 SL_BONUS_FILES_GAME_LOGIC = find_hero_move_bonus.c freers_bonus.c find_shortest_path_bonus.c lay_paths_bonus.c collect_paths_bonus.c sel_tgt_obj_bonus.c
 SL_BONUS_FILES_FT = ft_utils2_bonus.c ft_utils1_bonus.c p_utils_bonus.c p_utils2_bonus.c a_utils_bonus.c ap_utils_bonus.c ap_utils2_bonus.c
-SL_BONUS_FILES_MAIN = so_long_bonus.c so_long_bonus.h so_long_init_mlx_bonus.c so_long_gameplay_bonus.c so_long_gameplay2_bonus.c so_long_sprite_bonus.c
+SL_BONUS_FILES_MAIN = so_long_bonus.c so_long_init_mlx_bonus.c so_long_gameplay_bonus.c so_long_gameplay2_bonus.c so_long_sprite_bonus.c
 
 GNL_SRCS = $(addprefix $(GNL_DIR)/, $(GNL_FILES))
 SL_SRCS = $(addprefix $(SL_DIR)/, $(SL_FILES))
@@ -30,8 +30,7 @@ SL_BONUS_SRCS_MAIN = $(addprefix $(BONUS_MAIN_DIR)/, $(SL_BONUS_FILES_MAIN))
 
 all: mlx $(NAME)
 
-bonus: mlx $(LIBGNL)
-	$(CC) $(FLAGS)  $(SL_BONUS_SRCS_FT) $(SL_BONUS_SRCS_GAME_LOGIC) $(SL_BONUS_SRCS_UTILS) $(SL_BONUS_SRCS_MAIN) -L. -lgnl $(LIBS) -o $(BONUS_NAME)
+bonus: mlx $(BONUS_NAME)
 
 mlx:
 	make -C ./minilibx
@@ -43,11 +42,8 @@ $(LIBGNL): $(GNL_SRCS)
 $(NAME): $(LIBGNL) $(SL_SRCS)
 	$(CC) $(FLAGS) $(SL_SRCS) -L. -lgnl -L./minilibx $(LIBS) -g -o $(NAME)
 
-valgrind: debug
-	valgrind -s --suppressions=./utils/suppressions.supp --leak-check=full --show-leak-kinds=all --log-file=leaks.log ../debugger/a.out maps/map1.ber
-
-valgrind-bonus: debug-bonus
-	valgrind -s --suppressions=./utils/suppressions.supp --leak-check=full --show-leak-kinds=all --log-file=leaks.log ../debugger/a.out maps/lab2_bonus.ber
+$(BONUS_NAME): $(LIBGNL) $(SL_BONUS_SRCS_FT) $(SL_BONUS_SRCS_GAME_LOGIC) $(SL_BONUS_SRCS_UTILS) $(SL_BONUS_SRCS_MAIN) 
+	$(CC) $(FLAGS) $(SL_BONUS_SRCS_FT) $(SL_BONUS_SRCS_GAME_LOGIC) $(SL_BONUS_SRCS_UTILS) $(SL_BONUS_SRCS_MAIN) -L. -lgnl -L./minilibx $(LIBS) -g -o $(BONUS_NAME)
 
 debug: $(LIBGNL) $(SL_SRCS)
 	$(CC) $(FLAGS) -g $(SL_SRCS) -L. -lgnl -L./minilibx $(LIBS) -o ../debugger/a.out
@@ -57,10 +53,10 @@ debug-bonus: mlx $(LIBGNL)
 
 clean:
 	make -C ./minilibx clean
-	rm -f get_next_line.o get_next_line_utils.o $(NAME) $(BONUS_NAME) $(LIBGNL)
+	rm -f get_next_line.o get_next_line_utils.o $(BONUS_NAME) $(LIBGNL)
 
 fclean: clean
-	rm -f $(LIBGNL)
+	rm -f $(LIBGNL) $(NAME) $(BONUS_NAME)
 
 re: fclean all
 

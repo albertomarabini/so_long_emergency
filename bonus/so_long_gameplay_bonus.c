@@ -6,7 +6,7 @@
 /*   By: amarabin <amarabin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/27 17:24:07 by amarabin          #+#    #+#             */
-/*   Updated: 2023/08/22 20:37:02 by amarabin         ###   ########.fr       */
+/*   Updated: 2023/10/29 10:53:48 by amarabin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,18 +74,18 @@ int	on_keypress(int key, t_game *game)
 {
 	if (!game->is_on)
 		return (0);
-	if (key == 65307)
+	if (key == 53)
 	{
-		game->is_on = 0;
-		return (out(strdup("Quitting"), NULL, game));
+		free_game(game);
+		return (out(strdup("Quitting\n"), NULL, game));
 	}
-	else if (key == 97 || key == 65361)
+	else if (key == 123 || key == 0)
 		move_to(game->hero_r, game->hero_c - 1, game);
-	else if (key == 119 || key == 65362)
+	else if (key == 126 || key == 13)
 		move_to(game->hero_r - 1, game->hero_c, game);
-	else if (key == 100 || key == 65363)
+	else if (key == 124 || key == 2)
 		move_to(game->hero_r, game->hero_c + 1, game);
-	else if (key == 115 || key == 65364)
+	else if (key == 125 || key == 1)
 		move_to(game->hero_r + 1, game->hero_c, game);
 	return (0);
 }
@@ -112,7 +112,7 @@ int	render_next_frame(t_game *game)
 	t_point	p;
 
 	if (!game->is_on && elapsed_time(game->hero_clock, game) > GO_TICK)
-		mlx_loop_end(game->mlx);
+		free_game(game);
 	else if (game->is_on)
 	{
 		if (game->msg_out && elapsed_time(game->msg_clock, game) > MSG_TICK)

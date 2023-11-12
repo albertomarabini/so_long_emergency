@@ -24,6 +24,8 @@ void do_loop_flush(CFRunLoopObserverRef observer, CFRunLoopActivity activity, vo
 
   mlx_ptr = (mlx_ptr_t *)info;
   win = mlx_ptr->win_list;
+  if(mlx_ptr->main_loop_active == -1)
+    return ;
   while (win)
     {
       if (win->nb_flush > 0 && win->pixmgt)
@@ -102,6 +104,8 @@ void mlx_loop(mlx_ptr_t *mlx_ptr)
   CFRunLoopObserverRef observer;
   CFRunLoopObserverContext ocontext = {.version = 0, .info = mlx_ptr, .retain = NULL, .release = NULL, .copyDescription = NULL};
 
+  if(mlx_ptr->main_loop_active == -1)
+    return ;
   mlx_ptr->main_loop_active = 1;
 
   observer = CFRunLoopObserverCreate(NULL, kCFRunLoopBeforeTimers, true, 0, do_loop_flush, &ocontext);
@@ -146,13 +150,6 @@ void	mlx_int_loop_once()
     }
 }
 
-
-int			mlx_loop_end(mlx_ptr_t *mlx_ptr)
-{
-	mlx_ptr->main_loop_active = 0;
-	return (1);
-}
-
 int     mlx_do_sync(mlx_ptr_t *mlx_ptr)
 {
   mlx_win_list_t *win;
@@ -179,7 +176,7 @@ int mlx_loop_hook(mlx_ptr_t *mlx_ptr, void (*fct)(void *), void *param)
   CFRunLoopTimerContext	tcontext = {0, mlx_ptr, NULL, NULL, NULL};
   CFRunLoopTimerRef	timer;
 
-  if (mlx_ptr->loop_hook != NULL)
+  if (mlx_ptr->loop_hook != NULL || mlx_ptr->main_loop_active == -1)
     {
       CFRunLoopTimerInvalidate(mlx_ptr->loop_timer);
       [(id)(mlx_ptr->loop_timer) release];

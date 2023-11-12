@@ -6,7 +6,7 @@
 /*   By: amarabin <amarabin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/22 17:41:38 by amarabin          #+#    #+#             */
-/*   Updated: 2023/08/22 18:16:19 by amarabin         ###   ########.fr       */
+/*   Updated: 2023/10/29 10:08:13 by amarabin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ static void	free_images(t_game *game)
 	free_image(game->mlx, game->i.floor);
 }
 
-static void	free_game2(t_game *game)
+static int	free_game2(t_game *game)
 {
 	free(game->msg_out);
 	free_sprite(game, game->hero_spt);
@@ -57,15 +57,14 @@ static void	free_game2(t_game *game)
 		free_sprite_a(game, game->vill_spt);
 	if (game->win)
 		mlx_destroy_window(game->mlx, game->win);
-	if (game->mlx)
-	{
-		mlx_destroy_display(game->mlx);
+	if (game->win)
 		free(game->mlx);
-	}
 	free(game);
+	exit(0);
+	return (0);
 }
 
-void	free_game(t_game *game)
+int	free_game(t_game *game)
 {
 	if (game->map != NULL)
 		free_map(game->map, game->map_h);
@@ -82,5 +81,5 @@ void	free_game(t_game *game)
 		free(game->vill_clock);
 	if (game->msg_clock)
 		free(game->msg_clock);
-	free_game2(game);
+	return(free_game2(game));
 }

@@ -6,7 +6,7 @@
 /*   By: amarabin <amarabin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/27 17:41:20 by amarabin          #+#    #+#             */
-/*   Updated: 2023/08/22 17:47:55 by amarabin         ###   ########.fr       */
+/*   Updated: 2023/10/29 10:52:59 by amarabin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,7 @@ void	c_throw(t_game *game, char *err_1, char *err_2)
 {
 	t_game	*gm;
 
+	gm = NULL;
 	if (!err_1)
 		err_1 = "Generic Error\0";
 	if (!err_2)
@@ -103,8 +104,6 @@ void	c_throw(t_game *game, char *err_1, char *err_2)
 	}
 	else if (game)
 		gm = game;
-	if (gm && gm->mlx)
-		mlx_loop_end(gm->mlx);
 	if (gm)
 		free_game(gm);
 	exit(1);

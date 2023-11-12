@@ -100,4 +100,3 @@ int	mlx_destroy_image(mlx_ptr_t *mlx_ptr, mlx_img_list_t *img_ptr);
 void	*mlx_new_image();
 void    *mlx_xpm_to_image(mlx_ptr_t *xvar,char **xpm_data,int *width,int *height);
 int	mlx_do_sync(mlx_ptr_t *mlx_ptr);
-int			mlx_loop_end(mlx_ptr_t *mlx_ptr);

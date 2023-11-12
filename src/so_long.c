@@ -6,7 +6,7 @@
 /*   By: amarabin <amarabin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/26 08:17:55 by amarabin          #+#    #+#             */
-/*   Updated: 2023/10/28 11:18:39 by amarabin         ###   ########.fr       */
+/*   Updated: 2023/11/08 02:19:35 by amarabin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ static void	free_images(t_game *game)
 	free_image(game->mlx, game->imgs.floor);
 }
 
-static void	free_game(t_game *game)
+int	free_game(t_game *game)
 {
 	int	i;
 
@@ -53,12 +53,12 @@ static void	free_game(t_game *game)
 	free_images(game);
 	if (game->win)
 		mlx_destroy_window(game->mlx, game->win);
-	// if (game->mlx)
-	// {
-	// 	mlx_destroy_display(game->mlx);
+	out(strdup("Goodbye!\n"), NULL);
+	if (game->win)
 		free(game->mlx);
-	//}
 	free(game);
+	exit(0);
+	return (0);
 }
 
 static t_game	*init_game(char *file)
@@ -88,8 +88,14 @@ static t_game	*init_game(char *file)
 	return (game);
 }
 
+void leaks(void)
+{
+	system("leaks so_long");
+}
+
 int	main(int argc, char **argv)
 {
+	atexit(&leaks);
 	t_game	*game;
 
 	game = NULL;
@@ -99,5 +105,5 @@ int	main(int argc, char **argv)
 	if (game == NULL)
 		return (1);
 	free_game(game);
-	return (out(strdup("Goodbye!\n"), NULL));
+	return (0);
 }

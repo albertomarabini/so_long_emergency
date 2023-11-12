@@ -6,7 +6,7 @@
 /*   By: amarabin <amarabin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 20:15:54 by prossi            #+#    #+#             */
-/*   Updated: 2023/08/22 20:38:12 by amarabin         ###   ########.fr       */
+/*   Updated: 2023/10/29 10:51:18 by amarabin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,12 @@
 
 # include "../get_next_line/get_next_line.h"
 # include "../minilibx/mlx.h"
-# include "../minilibx/mlx_int.h"
 # include <errno.h>
 # include <limits.h>
 # include <stddef.h>
 # include <stdlib.h>
 # include <time.h>
+# include <string.h>
 # include <unistd.h>
 
 # define ASSET_SIZE 32
@@ -31,9 +31,9 @@
 # define MSG_TICK 2000
 # define TGT_Q_LEN 3
 # define CORNER_COUNT 4
-# define ASTS_PATH "/root/C/so_long/assets/"
-# define V_ASTS_PATH "/root/C/so_long/assets/vill/"
-# define H_ASTS_PATH "/root/C/so_long/assets/hero/"
+# define ASTS_PATH "./assets/"
+# define V_ASTS_PATH "./assets/vill/"
+# define H_ASTS_PATH "./assets/hero/"
 # define W_NAME "So long Goomba"
 
 typedef struct s_point
@@ -152,7 +152,7 @@ t_point					hero_p(t_game *gm);
 t_game					*create_safe_game(t_game *gm, int safe_w);
 /* /utils/utils5_bonus.c */
 void					free_map(char **map, int h);
-void					free_game(t_game *game);
+int						free_game(t_game *game);
 void					free_image(void *mlx, void *img);
 /* /utils/p_utils_bonus.c */
 t_point					duplicate_p(t_point p);
@@ -167,7 +167,7 @@ int						is_null_p(t_point p);
 void					*l_img(void *mlx, char *path, char *img, int s);
 void					p_img(t_game *game, void *img, int r, int c);
 int						intantiate_mlx_window(t_game *gm, char *name);
-int						mlx_destroy_hook(void *mlx_ptr, void *win_ptr);
+int						mlx_destroy_hook(t_game *gm, void *win_ptr);
 /* /ft/ap_utils_bonus.c */
 t_point					**rev_sort_ap(t_point **arr);
 void					free_ap(t_point **arr);

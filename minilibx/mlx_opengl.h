@@ -20,11 +20,5 @@ int	mlx_opengl_window_set_context(void *win_ptr);
 
 /* in case multiple opengl windows are present, change opengl active context */
 
-/*
-** It takes mlx_ptr, but it doesn't use it.
-** This function can only get Main Screen,
-** you should be careful when you use multiple monitors...
-*/
 
-int	mlx_get_screen_size(void *mlx_ptr, int *sizex, int *sizey);
 

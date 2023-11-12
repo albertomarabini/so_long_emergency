@@ -6,7 +6,7 @@
 /*   By: amarabin <amarabin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/17 05:17:54 by amarabin          #+#    #+#             */
-/*   Updated: 2023/08/17 07:04:45 by amarabin         ###   ########.fr       */
+/*   Updated: 2023/10/29 10:19:07 by amarabin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,9 +39,9 @@ void	p_img(t_game *game, void *img, int r, int c)
  * funct_ptr when it is called.
  *
  */
-int	mlx_destroy_hook(void *mlx_ptr, void *win_ptr)
+int	mlx_destroy_hook(t_game *gm, void *win_ptr)
 {
-	return (mlx_hook(win_ptr, 17, 0, mlx_loop_end, mlx_ptr));
+	return (mlx_hook(win_ptr, 17, 0, free_game, gm));
 }
 
 /**

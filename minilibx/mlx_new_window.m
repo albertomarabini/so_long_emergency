@@ -643,7 +643,6 @@ int get_mouse_button(NSEventType eventtype)
 
 
 // mlx API
- 
 
 void *mlx_new_window(mlx_ptr_t *mlx_ptr, int size_x, int size_y, char *title)
 {
@@ -678,6 +677,14 @@ void mlx_clear_window(mlx_ptr_t *mlx_ptr, mlx_win_list_t *win_ptr)
   win_ptr->nb_flush ++;
 }
 
+
+int	mlx_get_screen_size(void *mlx_ptr, int *sizex, int *sizey)
+{
+	NSRect e = [[NSScreen mainScreen] frame];
+	*sizex = (int)e.size.width;
+	*sizey = (int)e.size.height;
+	return (0);
+}
 
 void mlx_expose_hook(mlx_win_list_t *win_ptr, int (*funct_ptr)(), void *param)
 {
@@ -762,5 +769,6 @@ int     mlx_destroy_window(mlx_ptr_t *mlx_ptr, mlx_win_list_t *win_to_del)
 
   //  printf("destroy window done.\n");
   mlx_do_sync(mlx_ptr);
+  mlx_ptr->main_loop_active = -1;
   return (0);
 }

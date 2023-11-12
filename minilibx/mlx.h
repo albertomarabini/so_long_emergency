@@ -70,6 +70,13 @@ int	mlx_pixel_put(void *mlx_ptr, void *win_ptr, int x, int y, int color);
 **  color is 0x00RRGGBB
 */
 
+/*
+** It takes mlx_ptr, but it doesn't use it.
+** This function can only get Main Screen,
+** you should be careful when you use multiple monitors...
+*/
+
+int	mlx_get_screen_size(void *mlx_ptr, int *sizex, int *sizey);
 
 /*
 ** Image stuff

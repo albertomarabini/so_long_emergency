@@ -6,7 +6,7 @@
 /*   By: amarabin <amarabin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/27 17:24:07 by amarabin          #+#    #+#             */
-/*   Updated: 2023/08/17 11:19:00 by amarabin         ###   ########.fr       */
+/*   Updated: 2023/10/29 10:19:21 by amarabin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,7 @@ int	init_mlx(t_game *gm)
 		return (err(strdup("Can't load images\n"), NULL));
 	render_map(gm);
 	mlx_key_hook(gm->win, on_keypress, gm);
-	mlx_destroy_hook(gm->mlx, gm->win);
+	mlx_destroy_hook(gm, gm->win);
 	clock_gettime(CLOCK_MONOTONIC, gm->hero_clock);
 	clock_gettime(CLOCK_MONOTONIC, gm->vill_clock);
 	mlx_loop_hook(gm->mlx, render_next_frame, gm);
