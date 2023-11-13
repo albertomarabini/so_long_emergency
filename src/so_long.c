@@ -6,7 +6,7 @@
 /*   By: amarabin <amarabin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/26 08:17:55 by amarabin          #+#    #+#             */
-/*   Updated: 2023/11/12 19:57:29 by amarabin         ###   ########.fr       */
+/*   Updated: 2023/11/13 17:24:57 by amarabin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,14 +90,15 @@ static t_game	*init_game(char *file)
 
 void	leaks(void)
 {
-	system("leaks so_long");
+	system("leaks so_long");docker make re
+	
 }
 
 int	main(int argc, char **argv)
 {
 	t_game	*game;
 
-	atexit(&leaks);
+	//atexit(&leaks);
 	game = NULL;
 	if (argc != 2)
 		return (err(strdp("Missing map path\n"), NULL));

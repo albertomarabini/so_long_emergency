@@ -3,8 +3,8 @@ BONUS_NAME = $(NAME)_bonus
 
 CC = gcc
 FLAGS = -Wall -Wextra -Werror
-LIBS = -lmlx -lXext -lX11
-LIBS_MAC = -lmlx -framework OpenGL -framework AppKit
+LIBS_LINUX = -L./minilibx -lmlx -lXext -lX11
+LIBS = -L./minilibx -lmlx -framework OpenGL -framework AppKit
 
 GNL_DIR = get_next_line
 SL_DIR = src
@@ -14,6 +14,7 @@ BONUS_UTILS_DIR = utils
 BONUS_MAIN_DIR = bonus
 
 LIBGNL = libgnl.a
+LIBGNL_FLAGS = -L. -lgnl
 
 GNL_FILES = get_next_line.c get_next_line_utils.c
 SL_FILES = so_long.c so_long_utils.c so_long_read_map.c so_long_init_mlx.c so_long_gameplay.c so_long_ft_utils.c so_long_ft_utils2.c
@@ -41,16 +42,16 @@ $(LIBGNL): $(GNL_SRCS)
 	ar rcs $@ get_next_line.o get_next_line_utils.o
 
 $(NAME): $(LIBGNL) $(SL_SRCS)
-	$(CC) $(FLAGS) $(SL_SRCS) -L. -lgnl -L./minilibx $(LIBS) -g -o $(NAME)
+	$(CC) $(FLAGS) $(SL_SRCS) $(LIBGNL_FLAGS) $(LIBS) -o $(NAME)
 
 $(BONUS_NAME): $(LIBGNL) $(SL_BONUS_SRCS_FT) $(SL_BONUS_SRCS_GAME_LOGIC) $(SL_BONUS_SRCS_UTILS) $(SL_BONUS_SRCS_MAIN)
-	$(CC) $(FLAGS) $(SL_BONUS_SRCS_FT) $(SL_BONUS_SRCS_GAME_LOGIC) $(SL_BONUS_SRCS_UTILS) $(SL_BONUS_SRCS_MAIN) -L. -lgnl -L./minilibx $(LIBS) -g -o $(BONUS_NAME)
+	$(CC) $(FLAGS) $(SL_BONUS_SRCS_FT) $(SL_BONUS_SRCS_GAME_LOGIC) $(SL_BONUS_SRCS_UTILS) $(SL_BONUS_SRCS_MAIN) $(LIBGNL_FLAGS) $(LIBS) -o $(BONUS_NAME)
 
 debug: $(LIBGNL) $(SL_SRCS)
-	$(CC) $(FLAGS) -g $(SL_SRCS) -L. -lgnl -L./minilibx $(LIBS) -o ../debugger/a.out
+	$(CC) $(FLAGS) -g $(SL_SRCS) $(LIBGNL_FLAGS) $(LIBS) -o ../debugger/a.out
 
 debug-bonus: mlx $(LIBGNL)
-	$(CC) $(FLAGS) -g $(SL_BONUS_SRCS_FT) $(SL_BONUS_SRCS_GAME_LOGIC) $(SL_BONUS_SRCS_UTILS) $(SL_BONUS_SRCS_MAIN) -L. -lgnl $(LIBS) -o ../debugger/a.out
+	$(CC) $(FLAGS) -g $(SL_BONUS_SRCS_FT) $(SL_BONUS_SRCS_GAME_LOGIC) $(SL_BONUS_SRCS_UTILS) $(SL_BONUS_SRCS_MAIN) $(LIBGNL_FLAGS) $(LIBS) -o ../debugger/a.out
 
 clean:
 	make -C ./minilibx clean
@@ -62,7 +63,7 @@ fclean: clean
 re: fclean all
 
 norm:
-	@norminette $(GNL_SRCS) $(SL_SRCS) $(SL_BONUS_SRCS_FT) $(SL_BONUS_SRCS_GAME_LOGIC) $(SL_BONUS_SRCS_UTILS) $(SL_BONUS_SRCS_MAIN)
+	@norminette $(GNL_SRCS) $(SL_SRCS) $(SL_DIR)/so_long.h $(SL_BONUS_SRCS_FT) $(SL_BONUS_SRCS_GAME_LOGIC) $(SL_BONUS_SRCS_UTILS) $(SL_BONUS_SRCS_MAIN) $(BONUS_MAIN_DIR)/so_long_bonus.h
 
 renorm:  fclean all norm
 

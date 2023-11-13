@@ -6,7 +6,7 @@
 /*   By: amarabin <amarabin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/28 09:16:45 by amarabin          #+#    #+#             */
-/*   Updated: 2023/11/13 00:03:23 by amarabin         ###   ########.fr       */
+/*   Updated: 2023/11/13 16:55:37 by amarabin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,12 +84,21 @@ int	test_unreach(t_game *gm)
 {
 	t_game	eval;
 	char	**map;
+	int 	i;
 
 	eval = *gm;
 	map = duplicate_map(gm);
 	if (!map)
 		return (0);
 	unreach(eval.hero_r, eval.hero_c, eval, map);
+	i = 0;
+	while (i < eval.map_h)
+	{
+		if (map[i])
+			free(map[i]);
+		i++;
+	}
+	free(map);
 	if (eval.exit != 0 || eval.colls != 0)
 		return (0);
 	return (1);

@@ -6,40 +6,48 @@
 /*   By: amarabin <amarabin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/27 17:24:07 by amarabin          #+#    #+#             */
-/*   Updated: 2023/11/12 23:41:13 by amarabin         ###   ########.fr       */
+/*   Updated: 2023/11/13 17:13:31 by amarabin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../so_long_bonus.h"
 
-static void	unreach(int r, int c, t_game eval, t_game *game)
+static void	unreach(int r, int c, t_game eval, char **map)
 {
 	if (r < 0 || c < 0 || r > eval.map_h - 1 || c > eval.map_w - 1)
 		return ;
-	if (game->map[r][c] == '1')
+	if (map[r][c] == '1')
 		return ;
-	if (game->map[r][c] == 'E')
-		eval.exit--;
-	if (game->map[r][c] == 'C')
+	if (map[r][c] == 'E')
+		eval.exits--;
+	if (map[r][c] == 'C')
 		eval.colls--;
 	map[r][c] = '1';
-	unreach(r + 1, c, eval, game);
-	unreach(r - 1, c, eval, game);
-	unreach(r, c + 1, eval, game);
-	unreach(r, c - 1, eval, game);
+	unreach(r + 1, c, eval, map);
+	unreach(r - 1, c, eval, map);
+	unreach(r, c + 1, eval, map);
+	unreach(r, c - 1, eval, map);
 }
 
 static int	test_unreach(t_game *gm)
 {
 	t_game	eval;
 	char	**map;
+	int 	i;
 
 	eval = *gm;
 	map = duplicate_map(gm);
 	if (!map)
 		return (0);
-	unreach(eval->hero_r, eval->hero_c, map);
-	if (eval.exit != 0 || eval.colls != 0)
+	unreach(eval.hero_r, eval.hero_c, eval, map);
+	i = 0;
+	while (i < eval.map_h)
+	{
+		if (map[i])
+			free(map[i]);
+		i++;
+	}
+	if (eval.exits != 0 || eval.colls != 0)
 		return (0);
 	return (1);
 }
