@@ -6,7 +6,7 @@
 /*   By: amarabin <amarabin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/27 17:41:20 by amarabin          #+#    #+#             */
-/*   Updated: 2023/10/29 10:52:59 by amarabin         ###   ########.fr       */
+/*   Updated: 2023/11/12 22:13:38 by amarabin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ int	out(char *s1, char *s2, t_game *game)
 		if (s2 != NULL)
 			game->msg_out = ft_strjoin(s1, s2);
 		else
-			game->msg_out = strdup(s1);
+			game->msg_out = strdp(s1);
 		if (!game->msg_out)
 			c_throw(game, NULL, NULL);
 	}
@@ -93,7 +93,7 @@ void	c_throw(t_game *game, char *err_1, char *err_2)
 
 	gm = NULL;
 	if (!err_1)
-		err_1 = "Generic Error\0";
+		err_1 = strdp("Generic Error\0");
 	if (!err_2)
 		err_2 = c_strerror();
 	err(err_1, err_2);

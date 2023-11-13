@@ -6,7 +6,7 @@
 /*   By: amarabin <amarabin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/27 17:24:07 by amarabin          #+#    #+#             */
-/*   Updated: 2023/11/08 02:21:13 by amarabin         ###   ########.fr       */
+/*   Updated: 2023/11/12 23:15:02 by amarabin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,7 @@ static void	*l_img(void *mlx, char *path, int s)
 	img = mlx_xpm_file_to_image(mlx, path, &w, &h);
 	if (!img)
 	{
-		err(strdup("Unable to load image "), strerror(errno));
-		return (NULL);
+		return (err(strdp("Unable to load image "), strerror(errno)), NULL);
 	}
 	return (img);
 }
@@ -155,52 +154,23 @@ int	init_mlx(t_game *game)
 
 	game->mlx = mlx_init();
 	if (!game->mlx)
-		return (err(strdup("Can't instantiate mlx: "), strerror(errno)));
+		return (err(strdp("Can't instantiate mlx: "), strerror(errno)));
 	mlx_get_screen_size(game->mlx, &w, &h);
 	if (game->map_h * ASSET_SIZE > w || game->map_w * ASSET_SIZE > h)
-		return (err(strdup("Map too big for screen\n"), NULL));
+		return (err(strdp("Map too big for screen\n"), NULL));
 	if (game->map_h < 3 || game->map_w < 3)
-		return (err(strdup("Unplayable Map\n"), NULL));
+		return (err(strdp("Unplayable Map\n"), NULL));
 	w = game->map_w * ASSET_SIZE;
 	h = game->map_h * ASSET_SIZE;
 	game->win = mlx_new_window(game->mlx, w, h, "sl");
 	if (!game->win)
-		return (err(strdup("Can't instantiate mlx win: "), strerror(errno)));
+		return (err(strdp("Can't instantiate mlx win: "), strerror(errno)));
 	if (load_images(game) == -1)
-		return (err(strdup("Can't load images\n"), NULL));
+		return (err(strdp("Can't load images\n"), NULL));
 	mlx_clear_window(game->mlx, game->win);
 	render_map(game);
 	mlx_key_hook(game->win, on_keypress, game);
 	mlx_destroy_hook(game->win, game);
 	mlx_loop(game->mlx);
-	return (0);
-}
-
-int	is_map_unreacheable(int r, int c, t_game eval, t_game *game)
-{
-	if (r < 0 || c < 0 || r > eval.map_h - 1 || c > eval.map_w - 1)
-		return (0);
-	if (r == game->hero_r && c == game->hero_c)
-	{
-		eval.colls = 0;
-		eval.exit = 0;
-	}
-	if (game->map[r][c] == '1')
-		return (0);
-	if (game->map[r][c] == 'E' && eval.exit < game->exit)
-		eval.exit++;
-	if (game->map[r][c] == 'C' && eval.colls < game->colls)
-		eval.colls++;
-	is_map_unreacheable(r + 1, c, eval, game);
-	is_map_unreacheable(r - 1, c, eval, game);
-	is_map_unreacheable(r, c + 1, eval, game);
-	is_map_unreacheable(r, c - 1, eval, game);
-	if (r == game->hero_r && c == game->hero_c)
-	{
-		if (eval.exit == game->exit && eval.colls == game->colls)
-			return (1);
-		else
-			return (0);
-	}
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: amarabin <amarabin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/27 17:24:07 by amarabin          #+#    #+#             */
-/*   Updated: 2023/10/29 10:53:48 by amarabin         ###   ########.fr       */
+/*   Updated: 2023/11/12 19:49:05 by amarabin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,15 +44,15 @@ static void	catch_coll(t_game *game, int r, int c)
 static int	move_to(int r, int c, t_game *game)
 {
 	if (game->map[r][c] == '1')
-		return (out(strdup("Invalid move"), NULL, game));
+		return (out(strdp("Invalid move"), NULL, game));
 	else if (game->map[r][c] == 'E' && game->colls != 0)
-		return (out(strdup("Can't exit without all the keys\n"), NULL, game));
+		return (out(strdp("Can't exit without all the keys\n"), NULL, game));
 	else if (game->map[r][c] == 'E' || game->map[r][c] == 'V')
 	{
 		game->is_on = 0;
 		if (game->map[r][c] == 'V')
-			return (out(strdup("You Lose!"), NULL, game));
-		return (out(strdup("You Win!"), NULL, game));
+			return (out(strdp("You Lose!"), NULL, game));
+		return (out(strdp("You Win!"), NULL, game));
 	}
 	if (game->map[r][c] == 'C')
 		catch_coll(game, r, c);
@@ -77,7 +77,7 @@ int	on_keypress(int key, t_game *game)
 	if (key == 53)
 	{
 		free_game(game);
-		return (out(strdup("Quitting\n"), NULL, game));
+		return (out(strdp("Quitting\n"), NULL, game));
 	}
 	else if (key == 123 || key == 0)
 		move_to(game->hero_r, game->hero_c - 1, game);

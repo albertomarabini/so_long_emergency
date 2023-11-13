@@ -6,7 +6,7 @@
 /*   By: amarabin <amarabin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/26 08:17:55 by amarabin          #+#    #+#             */
-/*   Updated: 2023/08/22 17:58:50 by amarabin         ###   ########.fr       */
+/*   Updated: 2023/11/12 19:49:05 by amarabin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ static t_game	*init_game(char *file)
 
 	fd = open(file, O_RDONLY);
 	if (fd < 0)
-		c_throw(NULL, strdup("Unable to open file: "), c_strerror());
+		c_throw(NULL, strdp("Unable to open file: "), c_strerror());
 	game = (t_game *)malloc(sizeof(t_game));
 	if (!game)
 		c_throw(NULL, NULL, NULL);
@@ -62,7 +62,7 @@ int	main(int argc, char **argv)
 
 	game = NULL;
 	if (argc != 2)
-		return (err(strdup("Missing map path\n"), NULL));
+		return (err(strdp("Missing map path\n"), NULL));
 	game = init_game(argv[1]);
 	if (game == NULL)
 		return (1);

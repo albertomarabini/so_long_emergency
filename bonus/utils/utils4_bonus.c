@@ -6,7 +6,7 @@
 /*   By: amarabin <amarabin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/27 17:41:20 by amarabin          #+#    #+#             */
-/*   Updated: 2023/08/22 17:25:40 by amarabin         ###   ########.fr       */
+/*   Updated: 2023/11/12 19:51:07 by amarabin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ t_point	hero_p(t_game *gm)
 
 static void	fill_map_unsafe_spots(t_game *gm, char **map, t_point p, int ray)
 {
-	if (strchr("1E", map[p.r][p.c]) || (p.r == gm->hero_r && p.c == gm->hero_c)
+	if (strch("1E", map[p.r][p.c]) || (p.r == gm->hero_r && p.c == gm->hero_c)
 		|| ray == 0)
 		return ;
 	map[p.r][p.c] = '1';

@@ -6,7 +6,7 @@
 /*   By: amarabin <amarabin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 16:04:07 by amarabin          #+#    #+#             */
-/*   Updated: 2023/08/20 18:23:45 by amarabin         ###   ########.fr       */
+/*   Updated: 2023/11/12 22:14:48 by amarabin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,13 @@ char	*c_strerror(void)
 {
 	char	*err;
 
-	err = strdup(strerror(errno));
+	err = strdp(strerror(errno));
 	if (!err)
-		err = NULL;
-	return (strdup(strerror(errno)));
+		return (NULL);
+	return (err);
 }
 
-char	*strdup(const char *s)
+char	*strdp(const char *s)
 {
 	char	*dup;
 	size_t	len;
@@ -76,7 +76,7 @@ char	*itoa(int n)
 	l = 1;
 	n_copy = n;
 	if (n == INT_MIN)
-		return (strdup("-2147483648"));
+		return (strdp("-2147483648"));
 	if (n != 0)
 	{
 		l = 0;
@@ -114,11 +114,19 @@ char	*xyta(int x, int y)
 	char	*str3;
 
 	str = itoa(x);
+	if (!str)
+		return (NULL);
 	str2 = ft_strjoin(str, ",");
 	free(str);
+	if (!str2)
+		return (NULL);
 	str = itoa(y);
+	if (!str)
+		return (free(str2), NULL);
 	str3 = ft_strjoin(str2, str);
 	free(str);
 	free(str2);
+	if (!str3)
+		return (NULL);
 	return (str3);
 }

@@ -6,7 +6,7 @@
 /*   By: amarabin <amarabin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 17:25:32 by amarabin          #+#    #+#             */
-/*   Updated: 2023/08/22 20:40:53 by amarabin         ###   ########.fr       */
+/*   Updated: 2023/11/12 19:49:05 by amarabin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ char	**duplicate_map(t_game *gm)
 	i = 0;
 	while (gm->map_h > i++)
 	{
-		new_map[i - 1] = strdup(gm->map[i - 1]);
+		new_map[i - 1] = strdp(gm->map[i - 1]);
 		if (new_map[i - 1] == NULL)
 			c_throw(gm, NULL, NULL);
 	}

@@ -6,13 +6,13 @@
 /*   By: amarabin <amarabin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/27 17:36:11 by amarabin          #+#    #+#             */
-/*   Updated: 2023/07/29 02:53:01 by amarabin         ###   ########.fr       */
+/*   Updated: 2023/11/12 20:11:05 by amarabin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
-char	*strdup(const char *s)
+char	*strdp(const char *s)
 {
 	char	*dup;
 	size_t	len;
@@ -66,7 +66,7 @@ char	*itoa(int n)
 	l = 1;
 	n_copy = n;
 	if (n == INT_MIN)
-		return (strdup("-2147483648"));
+		return (strdp("-2147483648"));
 	if (n != 0)
 	{
 		l = 0;
@@ -91,12 +91,20 @@ char	*xyta(int x, int y)
 	char	*str3;
 
 	str = itoa(x);
+	if (!str)
+		return (NULL);
 	str2 = ft_strjoin(str, ",");
 	free(str);
+	if (!str2)
+		return (NULL);
 	str = itoa(y);
+	if (!str)
+		return (free(str2), NULL);
 	str3 = ft_strjoin(str2, str);
 	free(str);
 	free(str2);
+	if (!str3)
+		return (NULL);
 	return (str3);
 }
 

@@ -6,7 +6,7 @@
 /*   By: amarabin <amarabin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/27 17:24:07 by amarabin          #+#    #+#             */
-/*   Updated: 2023/08/22 20:37:18 by amarabin         ###   ########.fr       */
+/*   Updated: 2023/11/12 19:49:05 by amarabin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static int	process_vill(t_game *game, t_point *v, int vill_c)
 	if (p.r == game->hero_r && p.c == game->hero_c)
 	{
 		game->is_on = 0;
-		return (out(strdup("You Lose!"), NULL, game));
+		return (out(strdp("You Lose!"), NULL, game));
 	}
 	p_img(game, game->i.floor, v->r, v->c);
 	game->map[v->r][v->c] = '0';

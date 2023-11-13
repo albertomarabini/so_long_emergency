@@ -6,7 +6,7 @@
 /*   By: amarabin <amarabin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 20:15:54 by prossi            #+#    #+#             */
-/*   Updated: 2023/10/29 10:51:18 by amarabin         ###   ########.fr       */
+/*   Updated: 2023/11/12 20:51:45 by amarabin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@
 # include <limits.h>
 # include <stddef.h>
 # include <stdlib.h>
-# include <time.h>
 # include <string.h>
+# include <time.h>
 # include <unistd.h>
 
 # define ASSET_SIZE 32
@@ -124,7 +124,7 @@ typedef struct s_game
 
 /* /ft/ft_utils1_bonus.c */
 char					*c_strerror(void);
-char					*strdup(const char *s);
+char					*strdp(const char *s);
 char					*itoa(int n);
 char					*xyta(int x, int y);
 /* /ft/ft_utils2_bonus.c */
@@ -133,6 +133,9 @@ int						trn(int cond, int if_true, int if_false);
 int						abs(int val);
 int						within(int a, int b, int bound);
 void					*ft_memcpy(void *dest, const void *src, size_t n);
+/* /ft/ft_utils3_bonus.c */
+size_t					strl(const char *s);
+char					*strch(const char *s, int c);
 /* /utils/utils1_bonus.c */
 void					*c_alloc(t_game *game, size_t size);
 long long				elapsed_time(struct timespec *s, t_game *game);

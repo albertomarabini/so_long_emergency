@@ -6,7 +6,7 @@
 /*   By: amarabin <amarabin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 18:34:05 by amarabin          #+#    #+#             */
-/*   Updated: 2023/08/21 16:42:37 by amarabin         ###   ########.fr       */
+/*   Updated: 2023/11/12 19:51:07 by amarabin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,7 @@ void	lay_paths(t_pair p, int **pth, t_game *gm, char *ptrn)
 	if (p.a.val > 0)
 	{
 		if ((p.a.r < 1 || p.a.r > gm->map_h - 2 || p.a.c < 1
-				|| p.a.c > gm->map_w - 2) || strchr(ptrn, gm->map[p.a.r][p.a.c])
+				|| p.a.c > gm->map_w - 2) || strch(ptrn, gm->map[p.a.r][p.a.c])
 			|| p.a.val >= pth[p.a.r][p.a.c] || (p.a.r == p.b.r
 				&& p.a.c == p.b.c))
 		{

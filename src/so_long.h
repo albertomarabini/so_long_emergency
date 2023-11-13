@@ -6,7 +6,7 @@
 /*   By: amarabin <amarabin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 20:15:54 by prossi            #+#    #+#             */
-/*   Updated: 2023/10/29 10:46:29 by amarabin         ###   ########.fr       */
+/*   Updated: 2023/11/12 23:15:41 by amarabin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ typedef struct s_game
 void			putstr_fd(const char *s, int fd);
 char			*itoa(int n);
 char			*xyta(int x, int y);
-char			*strdup(const char *s);
+char			*strdp(const char *s);
 int				read_map(t_game *game, int fd);
 int				init_mlx(t_game *game);
 void			p_img(t_game *game, void *img, int r, int c);
@@ -68,8 +68,9 @@ int				err(char *err_1, char *err_2);
 int				out(char *s1, char *s2);
 int				on_keypress(int key, t_game *game);
 int				mlx_destroy_hook(void *win_ptr, t_game *game);
-char			*strchr(const char *s, int c);
-size_t			strlen(const char *s);
+char			*strch(const char *s, int c);
+size_t			strl(const char *s);
 int				free_game(t_game *game);
+int				test_unreach(t_game *gm);
 
 #endif

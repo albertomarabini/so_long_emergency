@@ -6,7 +6,7 @@
 /*   By: amarabin <amarabin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/17 04:35:17 by amarabin          #+#    #+#             */
-/*   Updated: 2023/08/17 04:40:06 by amarabin         ###   ########.fr       */
+/*   Updated: 2023/11/12 19:51:07 by amarabin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static t_point	*fnd_crn(t_point ij, t_game *gm)
 	rc.c = trn(ij.c, gm->map_w - 2, 1);
 	while ((!ij.c && rc.c < gm->map_w / 2) || (ij.c && rc.c > gm->map_w / 2))
 	{
-		if (strchr("E0C", gm->map[rc.r][rc.c]))
+		if (strch("E0C", gm->map[rc.r][rc.c]))
 			return (create_pp(rc.r, rc.c, 0, 42));
 		rc.c += trn(ij.c, -1, +1);
 		if (rc.c == gm->map_w / 2)
@@ -76,12 +76,12 @@ t_point	**find_corners(t_game *gm)
  */
 static int	vld_line(t_game *game, int r, int c)
 {
-	if (!strchr("0PECV1", game->map[r][c]))
-		return (err(strdup("Invalid symbol at "), xyta(r, c)));
+	if (!strch("0PECV1", game->map[r][c]))
+		return (err(strdp("Invalid symbol at "), xyta(r, c)));
 	if (game->map[r][c] == 'P')
 	{
 		if (game->hero > 0)
-			return (err(strdup("Multiple heroes\n"), NULL));
+			return (err(strdp("Multiple heroes\n"), NULL));
 		game->hero++;
 		game->hero_r = r;
 		game->hero_c = c;
@@ -94,7 +94,7 @@ static int	vld_line(t_game *game, int r, int c)
 	else if (game->map[r][c] == 'V')
 		game->vills++;
 	if ((c == 0 || c == game->map_w - 1) && game->map[r][c] != '1')
-		return (err(strdup("Invalid symbol at "), xyta(r, c)));
+		return (err(strdp("Invalid symbol at "), xyta(r, c)));
 	return (0);
 }
 
@@ -112,7 +112,7 @@ int	validate_map_content(t_game *game)
 			if ((r > 0 && r < game->map_h - 1) && vld_line(game, r, c) == -1)
 				return (-1);
 			if ((r == 0 || r == game->map_h - 1) && game->map[r][c] != '1')
-				return (err(strdup("Invalid symbol at "), xyta(r, c)));
+				return (err(strdp("Invalid symbol at "), xyta(r, c)));
 			c++;
 		}
 		r++;

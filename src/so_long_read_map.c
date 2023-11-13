@@ -6,7 +6,7 @@
 /*   By: amarabin <amarabin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/27 17:24:07 by amarabin          #+#    #+#             */
-/*   Updated: 2023/08/15 08:03:59 by amarabin         ###   ########.fr       */
+/*   Updated: 2023/11/12 23:16:48 by amarabin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,12 +29,12 @@
  */
 static int	val_line(t_game *game, int r, int c)
 {
-	if (!strchr("0PEC1", game->map[r][c]))
-		return (err(strdup("Invalid symbol at "), xyta(r, c)));
+	if (!strch("0PEC1", game->map[r][c]))
+		return (err(strdp("Invalid symbol at "), xyta(r, c)));
 	if (game->map[r][c] == 'P')
 	{
 		if (game->hero > 0)
-			return (err(strdup("Multiple heroes\n"), NULL));
+			return (err(strdp("Multiple heroes\n"), NULL));
 		game->hero++;
 		game->hero_r = r;
 		game->hero_c = c;
@@ -45,7 +45,7 @@ static int	val_line(t_game *game, int r, int c)
 	else if (game->map[r][c] == 'E')
 		game->exit++;
 	if ((c == 0 || c == game->map_w - 1) && game->map[r][c] != '1')
-		return (err(strdup("Invalid symbol at "), xyta(r, c)));
+		return (err(strdp("Invalid symbol at "), xyta(r, c)));
 	return (0);
 }
 
@@ -76,13 +76,15 @@ static int	validate_map(t_game *game)
 			if ((r > 0 && r < game->map_h - 1) && val_line(game, r, c) == -1)
 				return (-1);
 			if ((r == 0 || r == game->map_h - 1) && game->map[r][c] != '1')
-				return (err(strdup("Invalid symbol at "), xyta(r, c)));
+				return (err(strdp("Invalid symbol at "), xyta(r, c)));
 			c++;
 		}
 		r++;
 	}
 	if (!game->exit || !game->colls || !game->hero)
-		return (err(strdup("No exits, hero or collectibles\n"), NULL));
+		return (err(strdp("No exits, hero or collectibles\n"), NULL));
+	if (!test_unreach(game))
+		return (err(strdp("Unreachable cells\n"), NULL));
 	return (0);
 }
 
@@ -100,7 +102,7 @@ static int	init_game_map(t_game *game, char *last_line)
 
 	game->map = (char **)malloc(sizeof(char *) * (game->map_h + 1));
 	if (!game->map)
-		return (err(strdup("Unable to instantiate map\n"), strerror(errno)));
+		return (err(strdp("Unable to instantiate map\n"), strerror(errno)));
 	i = 0;
 	while (i <= game->map_h)
 	{
@@ -134,12 +136,12 @@ int	read_map(t_game *game, int fd)
 
 	res = get_next_line(fd, &line);
 	if (res == -1)
-		return (err(strdup("Error while reading map: "), strerror(errno)));
+		return (err(strdp("Error while reading map: "), strerror(errno)));
 	game->map_h++;
 	if (game->map_w < 0)
-		game->map_w = (int)strlen(line);
-	if (game->map_w != (int)strlen(line) || game->map_w == 0)
-		return (err(strdup("Uneven or empty row at "), itoa(game->map_h)));
+		game->map_w = (int)strl(line);
+	if (game->map_w != (int)strl(line) || game->map_w == 0)
+		return (err(strdp("Uneven or empty row at "), itoa(game->map_h)));
 	if (res == 1)
 	{
 		res = read_map(game, fd);

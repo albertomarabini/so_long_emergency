@@ -6,7 +6,7 @@
 /*   By: amarabin <amarabin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/27 17:24:07 by amarabin          #+#    #+#             */
-/*   Updated: 2023/10/29 10:19:21 by amarabin         ###   ########.fr       */
+/*   Updated: 2023/11/12 19:49:05 by amarabin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,19 +93,19 @@ int	init_mlx(t_game *gm)
 
 	gm->mlx = mlx_init();
 	if (!gm->mlx)
-		return (err(strdup("Can't instantiate mlx: "), c_strerror()));
+		return (err(strdp("Can't instantiate mlx: "), c_strerror()));
 	if (intantiate_mlx_window(gm, W_NAME) == -1)
 		return (-1);
 	i = 0;
 	gm->vill_spt = (t_stp **)c_alloc(gm, sizeof(t_stp *) * (gm->vills + 1));
 	while (gm->vills > i++)
 		gm->vill_spt[i - 1] = init_sprite(gm, create_p((i % 2), 2, 0, 0),
-				strdup(V_ASTS_PATH), strdup(".xpm"));
+				strdp(V_ASTS_PATH), strdp(".xpm"));
 	gm->vill_spt[gm->vills] = NULL;
-	gm->hero_spt = init_sprite(gm, create_p(0, 4, 0, 0), strdup(H_ASTS_PATH),
-			strdup(".xpm"));
+	gm->hero_spt = init_sprite(gm, create_p(0, 4, 0, 0), strdp(H_ASTS_PATH),
+			strdp(".xpm"));
 	if (load_images(gm) == -1)
-		return (err(strdup("Can't load images\n"), NULL));
+		return (err(strdp("Can't load images\n"), NULL));
 	render_map(gm);
 	mlx_key_hook(gm->win, on_keypress, gm);
 	mlx_destroy_hook(gm, gm->win);

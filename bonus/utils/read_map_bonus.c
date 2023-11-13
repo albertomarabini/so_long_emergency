@@ -6,11 +6,43 @@
 /*   By: amarabin <amarabin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/27 17:24:07 by amarabin          #+#    #+#             */
-/*   Updated: 2023/08/17 04:39:58 by amarabin         ###   ########.fr       */
+/*   Updated: 2023/11/12 23:41:13 by amarabin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../so_long_bonus.h"
+
+static void	unreach(int r, int c, t_game eval, t_game *game)
+{
+	if (r < 0 || c < 0 || r > eval.map_h - 1 || c > eval.map_w - 1)
+		return ;
+	if (game->map[r][c] == '1')
+		return ;
+	if (game->map[r][c] == 'E')
+		eval.exit--;
+	if (game->map[r][c] == 'C')
+		eval.colls--;
+	map[r][c] = '1';
+	unreach(r + 1, c, eval, game);
+	unreach(r - 1, c, eval, game);
+	unreach(r, c + 1, eval, game);
+	unreach(r, c - 1, eval, game);
+}
+
+static int	test_unreach(t_game *gm)
+{
+	t_game	eval;
+	char	**map;
+
+	eval = *gm;
+	map = duplicate_map(gm);
+	if (!map)
+		return (0);
+	unreach(eval->hero_r, eval->hero_c, map);
+	if (eval.exit != 0 || eval.colls != 0)
+		return (0);
+	return (1);
+}
 
 /**
  * This function validates the game map by performing the following checks:
@@ -22,17 +54,20 @@
  *    that will validate the content of the map line by line and globally
  * 4. After iterating through the entire map, the function checks that there
  *    is at least one exit and one collectible.
+ * 5. Checks if each collectible and exit is reachable.
  * @param gm The game state containing the map and other game-related data.
  * @return Returns 0 if the map is valid.
  */
 static int	validate_map(t_game *gm)
 {
 	if (gm->map_h < 3 || gm->map_w < 3)
-		return (err(strdup("Unplayable Map\n"), NULL));
+		return (err(strdp("Unplayable Map\n"), NULL));
 	if (validate_map_content(gm) == -1)
 		return (-1);
 	if (!gm->exits || !gm->colls || !gm->hero || !gm->vills)
-		return (err(strdup("No exit, hero, villain or collectible\n"), NULL));
+		return (err(strdp("No exit, hero, villain or collectible\n"), NULL));
+	if (!test_unreach(gm))
+		return (err(strdp("Unreachable cells\n"), NULL));
 	gm->a_vills = (t_point **)c_alloc(gm, sizeof(t_point *) * (gm->vills + 1));
 	gm->a_colls = (t_point **)c_alloc(gm, sizeof(t_point *) * (gm->colls + 1));
 	gm->a_exits = (t_point **)c_alloc(gm, sizeof(t_point *) * (gm->exits + 1));
@@ -59,7 +94,7 @@ static int	init_game_map(t_game *gm, char *last_line)
 
 	gm->map = (char **)malloc(sizeof(char *) * (gm->map_h + 1));
 	if (!gm->map)
-		return (err(strdup("Unable to instantiate map\n"), c_strerror()));
+		return (err(strdp("Unable to instantiate map\n"), c_strerror()));
 	i = 0;
 	while (i <= gm->map_h)
 	{
@@ -93,12 +128,12 @@ int	read_map(t_game *game, int fd)
 
 	res = get_next_line(fd, &line);
 	if (res == -1)
-		return (err(strdup("Error while reading map: "), c_strerror()));
+		return (err(strdp("Error while reading map: "), c_strerror()));
 	game->map_h++;
 	if (game->map_w < 0)
-		game->map_w = (int)strlen(line);
-	if (game->map_w != (int)strlen(line) || game->map_w == 0)
-		return (err(strdup("Uneven or empty row at "), itoa(game->map_h)));
+		game->map_w = (int)strl(line);
+	if (game->map_w != (int)strl(line) || game->map_w == 0)
+		return (err(strdp("Uneven or empty row at "), itoa(game->map_h)));
 	if (res == 1)
 	{
 		res = read_map(game, fd);

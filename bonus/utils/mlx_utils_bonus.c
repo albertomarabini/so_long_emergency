@@ -6,7 +6,7 @@
 /*   By: amarabin <amarabin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/17 05:17:54 by amarabin          #+#    #+#             */
-/*   Updated: 2023/10/29 10:19:07 by amarabin         ###   ########.fr       */
+/*   Updated: 2023/11/12 19:49:05 by amarabin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ void	*l_img(void *mlx, char *path, char *img, int s)
 	o_img = mlx_xpm_file_to_image(mlx, c_path, &w, &h);
 	if (!o_img)
 	{
-		err(strdup("Unable to load image "), c_strerror());
+		err(strdp("Unable to load image "), c_strerror());
 		return (NULL);
 	}
 	free(c_path);
@@ -74,11 +74,11 @@ int	intantiate_mlx_window(t_game *gm, char *name)
 
 	mlx_get_screen_size(gm->mlx, &w, &h);
 	if (gm->map_h * ASSET_SIZE + DEBUGGER_H > h || gm->map_w * ASSET_SIZE > w)
-		return (err(strdup("Map too big for screen \n"), NULL));
+		return (err(strdp("Map too big for screen \n"), NULL));
 	w = gm->map_w * ASSET_SIZE;
 	h = gm->map_h * ASSET_SIZE + DEBUGGER_H;
 	gm->win = mlx_new_window(gm->mlx, w, h, name);
 	if (!gm->win)
-		return (err(strdup("Can't instantiate mlx win: "), c_strerror()));
+		return (err(strdp("Can't instantiate mlx win: "), c_strerror()));
 	return (0);
 }

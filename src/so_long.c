@@ -6,7 +6,7 @@
 /*   By: amarabin <amarabin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/26 08:17:55 by amarabin          #+#    #+#             */
-/*   Updated: 2023/11/08 02:19:35 by amarabin         ###   ########.fr       */
+/*   Updated: 2023/11/12 19:57:29 by amarabin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ int	free_game(t_game *game)
 	free_images(game);
 	if (game->win)
 		mlx_destroy_window(game->mlx, game->win);
-	out(strdup("Goodbye!\n"), NULL);
+	out(strdp("Goodbye!\n"), NULL);
 	if (game->win)
 		free(game->mlx);
 	free(game);
@@ -68,7 +68,7 @@ static t_game	*init_game(char *file)
 
 	fd = open(file, O_RDONLY);
 	if (fd < 0)
-		err(strdup("Unable to open file\n"), NULL);
+		return (err(strdp("Unable to open file\n"), NULL), NULL);
 	game = (t_game *)malloc(sizeof(t_game));
 	game->map = NULL;
 	game->map_h = 0;
@@ -88,19 +88,19 @@ static t_game	*init_game(char *file)
 	return (game);
 }
 
-void leaks(void)
+void	leaks(void)
 {
 	system("leaks so_long");
 }
 
 int	main(int argc, char **argv)
 {
-	atexit(&leaks);
 	t_game	*game;
 
+	atexit(&leaks);
 	game = NULL;
 	if (argc != 2)
-		return (err(strdup("Missing map path\n"), NULL));
+		return (err(strdp("Missing map path\n"), NULL));
 	game = init_game(argv[1]);
 	if (game == NULL)
 		return (1);
